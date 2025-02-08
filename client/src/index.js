@@ -5,6 +5,7 @@ import Product from './components/Product';
 import Browse from './components/Browse';
 import AddProduct from "./components/AddProduct"
 import Profile from "./components/Profile"
+import ProductsList from './components/ProductsList';
 
 import {
   createBrowserRouter,
@@ -12,21 +13,10 @@ import {
 } from "react-router-dom";
 import './index.css';
 
-
-
 const router = createBrowserRouter([
   { path: "/", element: <Home /> },
   { path: "/product", element: <Product /> },
   { path: "/browse", element: <Browse /> },
-  // { path: "/theme/:theme", element: <ThemePage /> }
-  {
-    path: "/",
-    element: <Home />,
-  },
-  {
-    path: "/product",
-    element: <Product />
-  }, 
   {
     path: "/profile",
     element: <Profile />
@@ -34,6 +24,11 @@ const router = createBrowserRouter([
   {
     path: "/addproduct",
     element: <AddProduct />
+  },
+  // Updated route with dynamic theme parameter
+  {
+    path: "/products/:theme", // :theme is the dynamic parameter
+    element: <ProductsList />
   }
 ]);
 

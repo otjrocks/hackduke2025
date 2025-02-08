@@ -10,7 +10,7 @@ const AUTH0_DOMAIN = 'dev-quoye04cjq6hwl2z.us.auth0.com';
 const AUTH0_CLIENT_ID = 'h0UevR77e35hOWwKT6A3Yz021ZLJXPGG';
 const AUTH0_CLIENT_SECRET = 'DEJfHEtoCgiPPrk1P0DnBc9XxPfRBrrTDxyIz2vLJWAsWa-9VVyN4k5m6vMwOqQL';
 const AUTH0_CALLBACK_URL = 'http://localhost:3001/user/callback'; // Update if deployed
-const AUTH0_LOGOUT_URL = 'http://localhost:3001'; // Update to your app's homepage
+const AUTH0_LOGOUT_URL = 'http://localhost:3000'; // Update to your app's homepage
 
 // 1. Redirect User to Auth0 Login Page
 router.get('/login', (req, res) => {
@@ -40,7 +40,7 @@ router.get('/callback', async (req, res) => {
     res.cookie('token', access_token, { httpOnly: true, secure: false, sameSite: 'Strict' });
     res.cookie('id_token', id_token, { httpOnly: true, secure: false, sameSite: 'Strict' });
 
-    res.redirect('/dashboard'); 
+    res.redirect('http://localhost:3000/profile'); 
   } catch (error) {
     console.error('Error exchanging code for token:', error.response?.data || error.message);
     res.json({ success: false, message: 'Authentication failed' });

@@ -7,7 +7,7 @@ const isImageURL = require('image-url-validator').default;
 const checkAuthentication = require('../authMiddleware');
 
 router.get("/get/:theme", (req, res) => { 
-    Theme.findOne({theme: req.params.theme })
+    Theme.findOne({name: req.params.theme })
     .then((theme) => {
         Product.find({theme: theme})
         .then((products) => {
