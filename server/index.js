@@ -2,6 +2,7 @@ const express = require("express");
 const dotenv = require("dotenv");
 const mongoose = require("mongoose");
 const cors = require("cors");
+const cookieParser = require('cookie-parser');
 
 dotenv.config();
 
@@ -18,8 +19,18 @@ main().catch(err => console.log("MongoDB connection error:", err));
 
 const app = express();
 
-app.use(cors());
+const corsOptions = {
+  origin: "http://localhost:3000",//(https://your-client-app.com)
+  optionsSuccessStatus: 200,
+  credentials: true
+};
 
+app.use(cors(corsOptions));
+
+app.use(express.json()) //Add it first then others follow
+app.use(express.urlencoded({ extended: true }))
+
+app.use(require('cookie-parser')());
 // Routes
 const user = require("./routes/user");
 const product = require("./routes/product");

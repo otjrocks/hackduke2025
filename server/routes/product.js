@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();  
 const User = require('../models/user'); 
-const jwt = require('jsonwebtoken');
 const Product = require('../models/product');
 const Theme = require('../models/theme');
 const isImageURL = require('image-url-validator').default;
@@ -25,39 +24,56 @@ router.get("/get/:theme", (req, res) => {
     })
 });
 
+
 router.post("/add", checkAuthentication, (req, res) => {
-    const { email, name } = req.user; // get user info if signed in
-    async function updateProduct(req, res, user) {  // first try to find the product if it already exists and update it, otherwise create new product entry
+    async function updateProduct(req, res) {  
         try {
-          const isImage = await isImageURL(req.body.image);
-          if (!isImage) {
-            req.body.image = ''
-          }
-          const product = await Product.findOneAndUpdate(
-            { email: email, name: req.body.name, size: req.body.size }, 
-            { $set: { email: email, name: req.body.name, theme: req.body.theme, size: req.body.size, image: req.body.image, price: req.body.price, isSold: req.body.isSold, createdAt: req.body.createdAt } },
-            { new: true, upsert: true } // upsert will create a new product if it does not exist
-          );
-          res.json({ success: true, authenticated: true, product: product });
+            // Validate the image URL
+            const isImage = await isImageURL(req.body.image);
+            if (!isImage) {
+                req.body.image = '';
+            }
+
+            // Lookup theme by name (using Theme schema)
+            let theme = await Theme.findOne({ name: req.body.theme });
+            
+            // If theme doesn't exist, create it
+            if (!theme) {
+                theme = new Theme({
+                    name: req.body.theme
+                });
+
+                // Save the new theme to the database
+                await theme.save();
+            }
+
+            // Create or update product
+            const product = await Product.findOneAndUpdate(
+                { email: req.user.email, name: req.body.name, size: req.body.size }, 
+                {
+                    $set: {
+                        email: req.user.email, 
+                        name: req.body.name, 
+                        theme: theme._id,  // Use theme._id instead of req.body.theme
+                        size: req.body.size, 
+                        image: req.body.image, 
+                        price: req.body.price, 
+                        isSold: req.body.isSold, 
+                        createdAt: req.body.createdAt 
+                    }
+                },
+                { new: true, upsert: true } // upsert will create a new product if it does not exist
+            );
+
+            res.json({ success: true, authenticated: true, product: product });
         } catch (err) {
-          res.json({ success: false, authenticated: false, message: "Unable to add product. Please try again." });
+            console.log(err);
+            res.json({ success: false, authenticated: false, message: "Unable to add product. Please try again." });
         }
     }
 
-    const token = req?.cookies?.token
-    if (!token) {
-        res.json({ success: false, message: "Unauthorized"})
-    } else {
-        decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
-        User.findOne({_id: decoded.userId })
-            .then((user) => {
-                updateProduct(req, res, user);
-            })
-            .catch((err) => {
-                res.json({success: false, authenticated: false, message: "Invalid user token."})
-                console.log(err);
-            });
-    }
-})
+    updateProduct(req, res);
+});
+
 
 module.exports = router;
