@@ -4,7 +4,9 @@
   "private": true,
   "dependencies": {
     "cra-template": "1.2.0",
+    "daisyui": "^4.12.23",
     "react": "^19.0.0",
+    "react-daisyui": "^5.0.5",
     "react-dom": "^19.0.0",
     "react-scripts": "5.0.1"
   },
@@ -33,6 +35,10 @@
     ]
   },
   "devDependencies": {
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.5.1",
+    "react-router-dom": "^7.1.5",
+    "tailwindcss": "^4.0.4",
     "web-vitals": "^4.2.4"
   }
 }
