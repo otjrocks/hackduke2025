@@ -35,7 +35,7 @@ router.post("/add", (req, res) => {
           }
           const product = await Product.findOneAndUpdate(
             { user_id: user._id, name: req.body.name, size: req.body.size }, 
-            { $set: { user_id: user._id, name: req.body.name, category: req.body.category, size: req.body.size, image: req.body.image, price: req.body.price, isSold: req.body.isSold, createdAt: req.body.createdAt } },
+            { $set: { user_id: user._id, name: req.body.name, theme: req.body.theme, size: req.body.size, image: req.body.image, price: req.body.price, isSold: req.body.isSold, createdAt: req.body.createdAt } },
             { new: true, upsert: true } // upsert will create a new product if it does not exist
           );
           res.json({ success: true, authenticated: true, product: product });
