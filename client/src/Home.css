@@ -1,0 +1,91 @@
+@font-face {
+    font-family: 'Super Boys';
+    src: url('./assets/fonts/SuperBoys.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+/* Apply Super Boys font to all headers */
+h1, h2 {
+    font-family: 'Super Boys', sans-serif !important;
+    font-size: 3.7rem;
+    color: #ff5733;
+}
+
+/* Ensure consistent body styling */
+body {
+    font-family: 'Super Boys', sans-serif !important;
+    background-color: #fdf0d5;
+    margin: 0;
+    padding: 0;
+}
+
+/* Home Page Container */
+.home-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    width: 100%;
+}
+
+/* Hero Section */
+.home-container {
+    height: 100vh; /* Full screen height */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+
+/* Browse Button */
+.browse-link {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 1.5rem;
+    color: white;
+    background-color: #ff5733;
+    padding: 12px 24px;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: 0.3s ease-in-out;
+    font-weight: bold;
+}
+
+.browse-link:hover {
+    background-color: #c70039;
+}
+
+/* About Us Section */
+.about-section {
+    background-color: #ff5733; /* Salmon orange background */
+    text-align: center;
+    color: white;
+    width: 80%;
+    padding: 60px 20px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    margin-top: 25px;
+}
+
+.about-section h2 {
+    font-size: 3rem;
+    font-size: 3rem;
+    font-weight: bold;
+    color: #fdf0d5;
+    margin-bottom: 20px;
+}
+
+.about-section p {
+    font-size: 1.4rem;
+    color: white;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 1.2rem;
+    line-height: 1.6;
+    color: #fdf0d5;
+    font-size: 1.2rem;
+    line-height: 1.5;
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto;
+}
