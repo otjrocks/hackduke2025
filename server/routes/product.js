@@ -24,26 +24,56 @@ router.get("/get/:theme", (req, res) => {
     })
 });
 
+
 router.post("/add", checkAuthentication, (req, res) => {
-    console.log(req.body);
-    // async function updateProduct(req, res) {  // first try to find the product if it already exists and update it, otherwise create new product entry
-    //     try {
-    //       const isImage = await isImageURL(req.body.image);
-    //       if (!isImage) {
-    //         req.body.image = ''
-    //       }
-    //       const product = await Product.findOneAndUpdate(
-    //         { email: req.user.email, name: req.body.name, size: req.body.size }, 
-    //         { $set: { email: email, name: req.body.name, theme: req.body.theme, size: req.body.size, image: req.body.image, price: req.body.price, isSold: req.body.isSold, createdAt: req.body.createdAt } },
-    //         { new: true, upsert: true } // upsert will create a new product if it does not exist
-    //       );
-    //       res.json({ success: true, authenticated: true, product: product });
-    //     } catch (err) {
-    //       console.log(err);
-    //       res.json({ success: false, authenticated: false, message: "Unable to add product. Please try again." });
-    //     }
-    // }
-    // updateProduct(req, res);
-})
+    async function updateProduct(req, res) {  
+        try {
+            // Validate the image URL
+            const isImage = await isImageURL(req.body.image);
+            if (!isImage) {
+                req.body.image = '';
+            }
+
+            // Lookup theme by name (using Theme schema)
+            let theme = await Theme.findOne({ name: req.body.theme });
+            
+            // If theme doesn't exist, create it
+            if (!theme) {
+                theme = new Theme({
+                    name: req.body.theme
+                });
+
+                // Save the new theme to the database
+                await theme.save();
+            }
+
+            // Create or update product
+            const product = await Product.findOneAndUpdate(
+                { email: req.user.email, name: req.body.name, size: req.body.size }, 
+                {
+                    $set: {
+                        email: req.user.email, 
+                        name: req.body.name, 
+                        theme: theme._id,  // Use theme._id instead of req.body.theme
+                        size: req.body.size, 
+                        image: req.body.image, 
+                        price: req.body.price, 
+                        isSold: req.body.isSold, 
+                        createdAt: req.body.createdAt 
+                    }
+                },
+                { new: true, upsert: true } // upsert will create a new product if it does not exist
+            );
+
+            res.json({ success: true, authenticated: true, product: product });
+        } catch (err) {
+            console.log(err);
+            res.json({ success: false, authenticated: false, message: "Unable to add product. Please try again." });
+        }
+    }
+
+    updateProduct(req, res);
+});
+
 
 module.exports = router;

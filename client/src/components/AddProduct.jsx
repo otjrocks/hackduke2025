@@ -38,41 +38,24 @@ export default function AddProduct() {
       return;
     }
   
-    const request = new Request("http://localhost:3001/product/add", {
+  const request = new Request(`http://localhost:3001/product/add`, {
       method: "POST",
       headers: {
-        // No need for Content-Type header for FormData, browser sets it automatically
+          'Content-Type': 'application/json'
       },
-      body: JSON.stringify({name: "owen"}),
-      credentials: "include", // Ensure cookies are sent
-    });
-  
-    try {
-      const response = await axios.post("http://localhost:3001/product/add", data, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
+      body: JSON.stringify(formData),
+      credentials: "include"
+  });
+  fetch(request)
+      .then(res => {
+          return res.json();
+      })
+      .then(res => {
+          console.log(res);
+      })
+      .catch (function (error) {
+          console.log('Request failed: ', error);
       });
-
-      if (response.data.success) {
-        setMessage("Product added successfully!");
-        setFormData({
-          name: "",
-          image: null,
-          category: "Clothing",
-          size: "M",
-          price: "",
-          isSold: false,
-          theme: "Casual",
-          createdAt: new Date().toISOString().slice(0, 10),
-        });
-      } else {
-        setMessage(result.message || "Failed to add product.");
-      }
-    } catch (error) {
-      console.error("Error:", error);
-      setMessage("Error submitting the form. Please try again.");
-    }
   };
   
   
