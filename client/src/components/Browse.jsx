@@ -1,24 +1,38 @@
 import { Link } from "react-router-dom";
+import "./Browse.css"; // ✅ Make sure Browse.css handles styling
 
 const themes = [
-    { name: "Halloween", image: "halloween.jpg" },
-    { name: "90s Party", image: "90s.jpg" },
-    { name: "Beach Party", image: "beach.jpg" },
-    { name: "Formal Night", image: "formal.jpg" }
+    "Duke Basketball",
+    "Halloween",
+    "Oktoberfest",
+    "Professional Events",
+    "Waynestock",
+    "Disco",
+    "Date Formals",
+    "Duo Costumes",
+    "Christmas",
+    "Cowboy",
+    "Tropical",
+    "Valentines",
+    "Rave",
+    "Candyland",
+    "Mardi Gras",
+    "Risky Business",
+    "Apres Ski",
+    "Spring Break",
+    "Formals", 
+    "Football tailgate"
 ];
 
 export default function Browse() {
     return (
-        <div>
+        <div className="browse-container">
             <h1>Browse Party Themes</h1>
-            <div style={{ display: "flex", gap: "20px", flexWrap: "wrap" }}>
+            <div className="theme-list">
                 {themes.map((theme) => (
-                    <Link key={theme.name} to={`/theme/${theme.name}`} style={{ textDecoration: "none", color: "black" }}>
-                        <div style={{ border: "1px solid black", padding: "10px", textAlign: "center" }}>
-                            <img src={theme.image} alt={theme.name} style={{ width: "200px", height: "200px", objectFit: "cover" }} />
-                            <h3>{theme.name}</h3>
-                        </div>
-                    </Link>
+                    <div key={theme} className="theme-card">
+                        <h3>{theme}</h3>
+                    </div>
                 ))}
             </div>
         </div>
