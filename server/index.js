@@ -18,5 +18,5 @@ async function main() {
 const app = express();
 
 app.listen(PORT, () => {
-  console.log(`Server listening on ${PORT}`);
+  console.log(`Server listening on ${process.env.PORT}`);
 });
