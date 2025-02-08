@@ -11,6 +11,11 @@ const ProductSchema = new Schema({
         type: String,
         required: true,
     },
+    theme: {
+        type: Schema.Types.ObjectId,
+        ref: 'Theme',
+        required: true,
+    },
     name: {
         type: String,
         required: true,
