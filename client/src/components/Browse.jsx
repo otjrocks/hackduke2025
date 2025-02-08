@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import "./Browse.css"; // ✅ Make sure Browse.css handles styling
 
 export default function Browse() {
     const [themes, setThemes] = useState([]);
     const [error, setError] = useState(null);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchThemes = async () => {
@@ -22,6 +23,11 @@ export default function Browse() {
         fetchThemes();
     }, []);
 
+    const handleThemeClick = (themeName) => {
+        // Redirect to a new route based on the theme name
+        navigate(`/products/${themeName}`);
+    };
+
     return (
         <div className="browse-container">
             <h1>Browse Party Themes</h1>
@@ -30,7 +36,11 @@ export default function Browse() {
             ) : (
                 <div className="theme-list">
                     {themes.map((theme) => (
-                        <div key={theme._id} className="theme-card">
+                        <div
+                            onClick={() => handleThemeClick(theme.name)}
+                            key={theme._id}
+                            className="theme-card"
+                        >
                             <h3>{theme.name}</h3>
                         </div>
                     ))}
