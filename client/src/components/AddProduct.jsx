@@ -30,33 +30,34 @@ export default function AddProduct() {
       });
     }
   };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    const data = new FormData();
-    data.append("name", formData.name);
-    data.append("image", formData.image);
-    data.append("category", formData.category); // Include category in form data
-    data.append("size", formData.size);
-    data.append("price", formData.price);
-    data.append("isSold", formData.isSold);
-    data.append("theme", formData.theme);
-    data.append("createdAt", formData.createdAt);
-
+  
+    if (!formData.image) {
+      setMessage("Please upload an image.");
+      return;
+    }
+  
+    const request = new Request("http://localhost:3001/product/add", {
+      method: "POST",
+      headers: {
+        // No need for Content-Type header for FormData, browser sets it automatically
+      },
+      body: JSON.stringify({name: "owen"}),
+      credentials: "include", // Ensure cookies are sent
+    });
+  
     try {
-      const response = await axios.post("http://localhost:3001/product/add", data, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
-
-      if (response.data.success) {
+      const response = await fetch(request);
+  
+      const result = await response.json();
+  
+      if (response.ok && result.success) {
         setMessage("Product added successfully!");
         setFormData({
           name: "",
           image: null,
-          category: "Clothing", // Reset category
+          category: "Clothing",
           size: "M",
           price: "",
           isSold: false,
@@ -64,12 +65,15 @@ export default function AddProduct() {
           createdAt: new Date().toISOString().slice(0, 10),
         });
       } else {
-        setMessage(response.data);
+        setMessage(result.message || "Failed to add product.");
       }
     } catch (error) {
+      console.error("Error:", error);
       setMessage("Error submitting the form. Please try again.");
     }
   };
+  
+  
 
   const renderSizeOptions = () => {
     const sizeOptions = {
