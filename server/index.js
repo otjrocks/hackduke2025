@@ -34,9 +34,11 @@ app.use(require('cookie-parser')());
 // Routes
 const user = require("./routes/user");
 const product = require("./routes/product");
+const theme = require("./routes/theme");
 
 app.use("/user", user);
 app.use("/product", product);
+app.use("/theme", theme);
 
 app.listen(PORT, () => {
   console.log(`Server listening on ${PORT}`);
