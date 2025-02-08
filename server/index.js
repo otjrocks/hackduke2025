@@ -17,6 +17,13 @@ async function main() {
 
 const app = express();
 
+// Routes
+var user = require('./routes/user');
+var product = require('./routes/product');
+
+app.use('/user', user);
+app.use('/product', product);
+
 app.listen(PORT, () => {
   console.log(`Server listening on ${process.env.PORT}`);
 });
