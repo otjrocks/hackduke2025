@@ -1,0 +1,17 @@
+{
+  "name": "hackduke2025",
+  "version": "1.0.0",
+  "description": "Hack Duke Project 2025",
+  "main": "index.js",
+  "scripts": {
+    "start": "node server/index.js",
+    "dev": "nodemon server/index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.21.2",
+    "nodemon": "^3.1.9"
+  }
+}
