@@ -37,7 +37,7 @@ router.get('/callback', async (req, res) => {
     const { access_token, id_token } = response.data;
 
     // Store tokens in HTTP-only cookies
-    res.cookie('token', access_token, { httpOnly: true, secure: true, sameSite: 'Strict' });
+    res.cookie('token', access_token, { httpOnly: true, secure: false, sameSite: 'Strict' });
     res.cookie('id_token', id_token, { httpOnly: true, secure: true, sameSite: 'Strict' });
 
     res.redirect('/dashboard'); 
