@@ -2,9 +2,8 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema; 
   
 const ProductSchema = new Schema({    
-    user_id: {
-        type: Schema.Types.ObjectId, 
-        ref: 'User',
+    email: {
+        type: String, 
         required: true, 
     }, 
     image: {
