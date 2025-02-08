@@ -4,9 +4,8 @@ const User = require('../models/user');
 const jwt = require('jsonwebtoken');
 const Product = require('../models/product');
 const Theme = require('../models/theme');
-//const theme = require('../models/theme');
-//const product = require('../models/product');
 const isImageURL = require('image-url-validator').default;
+const checkAuthentication = require('../authMiddleware');
 
 router.get("/get/:theme", (req, res) => { 
     Theme.findOne({theme: req.params.theme })
@@ -26,7 +25,8 @@ router.get("/get/:theme", (req, res) => {
     })
 });
 
-router.post("/add", (req, res) => {
+router.post("/add", checkAuthentication, (req, res) => {
+    const { email, name } = req.user; // get user info if signed in
     async function updateProduct(req, res, user) {  // first try to find the product if it already exists and update it, otherwise create new product entry
         try {
           const isImage = await isImageURL(req.body.image);
@@ -34,8 +34,8 @@ router.post("/add", (req, res) => {
             req.body.image = ''
           }
           const product = await Product.findOneAndUpdate(
-            { user_id: user._id, name: req.body.name, size: req.body.size }, 
-            { $set: { user_id: user._id, name: req.body.name, theme: req.body.theme, size: req.body.size, image: req.body.image, price: req.body.price, isSold: req.body.isSold, createdAt: req.body.createdAt } },
+            { email: email, name: req.body.name, size: req.body.size }, 
+            { $set: { email: email, name: req.body.name, theme: req.body.theme, size: req.body.size, image: req.body.image, price: req.body.price, isSold: req.body.isSold, createdAt: req.body.createdAt } },
             { new: true, upsert: true } // upsert will create a new product if it does not exist
           );
           res.json({ success: true, authenticated: true, product: product });
