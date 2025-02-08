@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client'
 import Home from "./Home"
 import Product from './components/Product';
 import AddProduct from "./components/AddProduct"
+import Profile from "./components/Profile"
 
 import {
   createBrowserRouter,
@@ -19,17 +20,14 @@ const router = createBrowserRouter([
   {
     path: "/product",
     element: <Product />
-<<<<<<< HEAD
   }, 
   {
     path: "/profile",
     element: <Profile />
-=======
   },
   {
     path: "/addproduct",
     element: <AddProduct />
->>>>>>> 81cd65e2afe939f412c0d77a69ee6e5976a00daa
   }
 ]);
 
