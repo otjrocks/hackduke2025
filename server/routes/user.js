@@ -59,6 +59,7 @@ router.get('/logout', (req, res) => {
 // 4. Get User Info (Cache User Info for Subsequent Requests)
 router.get('/userinfo', async (req, res) => {
   const token = req.cookies.token;
+  console.log(token);
   if (!token) {
     return res.json({ success: false, authenticated: false, message: 'Unauthorized' });
   }
