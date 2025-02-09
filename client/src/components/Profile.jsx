@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import Header from './Header';
+import { Link } from 'react-router-dom';
+import './Profile.css'
 
 export default function Profile() {
   const [userInfo, setUserInfo] = useState(null);
@@ -61,15 +63,7 @@ export default function Profile() {
     <p className="greeting">You're logged in as {userInfo.email}</p>
   </div>
 
-  <div className="profile-details">
-    <div className="detail">
-      <strong>Email:</strong> <span>{userInfo.email}</span>
-    </div>
-    <div className="detail">
-      <strong>Nickname:</strong> <span>{userInfo.nickname || 'N/A'}</span>
-    </div>
-  </div>
-  <h1></h1>
+  <Link to="/addproduct"><button className="logout-btn">Add New Product</button></Link>
   <button className="logout-btn" onClick={handleLogout}>Logout</button>
 </div>
 

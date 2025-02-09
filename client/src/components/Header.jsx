@@ -32,7 +32,7 @@ export default function Header() {
 
         return (
             <header className="header">
-                <Link to="/"><div className="app-name">Campus Closet</div></Link>
+                <Link className="app-name" to="/"><div className="app-name">Campus Closet</div></Link>
                 <nav className="navigation">
                     <ul>
                         <li><Link to="/">home</Link></li>
