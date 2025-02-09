@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 
 const ProductsList = () => {
     const { theme } = useParams();
@@ -10,10 +10,7 @@ const ProductsList = () => {
     useEffect(() => {
         const fetchProducts = async () => {
             try {
-                // Fetch products by theme using fetch API
                 const response = await fetch(`http://localhost:3001/product/get/${theme}`);
-
-                // Check if the response is successful
                 if (response.ok) {
                     const data = await response.json();
                     if (data.success) {
@@ -31,7 +28,6 @@ const ProductsList = () => {
                 setLoading(false);
             }
         };
-
         fetchProducts();
     }, [theme]);
 
@@ -44,29 +40,27 @@ const ProductsList = () => {
     }
 
     return (
-        <div>
-            { products.length < 1 ?
-            <>
-            Sorry, There are no products for the theme {theme}!
-            </> 
-            :
-            <>
-            <h1>Products for {theme}</h1>
-            <div className="product-list">
-                {products.map((product) => (
-                    <div key={product._id} className="product-item">
-                        <h2>{product.name}</h2>
-                        <p>Size: {product.size}</p>
-                        <p>Price: ${product.price}</p>
-                        <p>Sold: {product.isSold ? "Yes" : "No"}</p>
-                        {product.image && <img src={product.image} alt={product.name} />}
+        <div className="products-container">
+            {products.length < 1 ? (
+                <p>Sorry, there are no products for the theme {theme}!</p>
+            ) : (
+                <>
+                    <h1>Products for {theme}</h1>
+                    <div className="product-list">
+                        {products.map((product) => (
+                            <Link to={`/product/${product._id}`} key={product._id} className="product-card">
+                                <div className="product-item">
+                                    <h2>{product.name}</h2>
+                                </div>
+                            </Link>
+                        ))}
                     </div>
-                ))}
-            </div>
-            </>
-            }
+                </>
+            )}
         </div>
     );
 };
 
 export default ProductsList;
+
+
