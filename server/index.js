@@ -57,7 +57,6 @@ app.use(
     cookie: { secure: true, sameSite: "none" },
   })
 );
-const cors = require('cors');
 
 app.use(cors({
   origin: 'https://hackduke2025.vercel.app', // Allow only your frontend
