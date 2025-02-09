@@ -34,7 +34,7 @@ export default function Profile() {
 
   const fetchUserProducts = async (email) => {
     try {
-      const response = await axios.get(`http://localhost:3001/products/get/email/${email}`, {
+      const response = await axios.get(`http://localhost:3001/product/get/email/${email}`, {
         withCredentials: true,
       });
 
@@ -54,19 +54,7 @@ export default function Profile() {
   const handleLogout = () => {
     window.location.href = 'http://localhost:3001/user/logout';
   };
-
-  // if (error) {
-  //   return (
-  //     <>
-  //       <Header />
-  //       <div className="main-content">
-  //         <h2>{error}</h2>
-  //         <button onClick={() => window.location.href = 'http://localhost:3001/user/login'}>Go to Login</button>
-  //       </div>
-  //     </>
-  //   );
-  // }
-
+  
   if (!userInfo) {
     return <div>Loading...</div>;
   }

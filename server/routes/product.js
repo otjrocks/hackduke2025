@@ -12,7 +12,6 @@ router.get("/get/email/:email", checkAuthentication, async (req, res) => {
 
         // Find products associated with the given email
         const products = await Product.find({ email: userEmail });
-
         if (!products || products.length === 0) {
             return res.json({ success: false, message: "No products found for this email." });
         }
