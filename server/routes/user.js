@@ -79,13 +79,11 @@ router.get('/userinfo', async (req, res) => {
 
     req.session.user = response.data;
     // Store user info in session for future requests
-    // req.session.save(err => {
-    //   if(err){
-    //       console.log(err);
-    //   } else {
-    //       res.send(req.session.user);
-    //   }
-    // });
+    req.session.save(err => {
+      if (err) {
+        console.log(err);
+      }
+    });
 
     res.json({ success: true, authenticated: true, user: response.data });
   } catch (error) {
