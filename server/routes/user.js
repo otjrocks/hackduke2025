@@ -37,10 +37,10 @@ router.get('/callback', async (req, res) => {
     const { access_token, id_token } = response.data;
 
     // Store tokens in HTTP-only cookies
-    res.cookie('token', access_token, { httpOnly: true, secure: false, sameSite: 'Strict' });
-    res.cookie('id_token', id_token, { httpOnly: true, secure: false, sameSite: 'Strict' });
+    res.cookie('token', access_token, { httpOnly: true, secure: true, sameSite: 'Strict' });
+    res.cookie('id_token', id_token, { httpOnly: true, secure: true, sameSite: 'Strict' });
 
-    res.redirect(process.env.CLIENT_URL + '/profile'); 
+    res.redirect(process.env.CLIENT_URL + '/'); 
   } catch (error) {
     console.error('Error exchanging code for token:', error.response?.data || error.message);
     res.json({ success: false, message: 'Authentication failed' });
