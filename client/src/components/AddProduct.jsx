@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import "./AddProduct.css";
+import Header from "./Header";
 
 export default function AddProduct() {
   const [message, setMessage] = useState("");
@@ -93,6 +94,7 @@ export default function AddProduct() {
   };
   return (
     <div className="container">
+      <Header />
       <h2>Add Product</h2>
       {message && <p className="message">{message}</p>}
       <form onSubmit={handleSubmit}>
