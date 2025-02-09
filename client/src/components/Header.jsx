@@ -42,10 +42,10 @@ export default function Header() {
                         {isLoggedIn ? (
                             <>
                                 <li><Link to="/profile">profile</Link></li>
-                                <li><Link onClick={() => window.location.href = 'http://localhost:3001/user/logout'}>logout</Link></li>
+                                <li><Link to='http://localhost:3001/user/logout'>logout</Link></li>
                             </>
                         ) : (
-                            <li><Link onClick={() => window.location.href = 'http://localhost:3001/user/login'}>login</Link></li>
+                            <li><Link to='http://localhost:3001/user/login'>login</Link></li>
                         )}
                     </ul>
                 </nav>
