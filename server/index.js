@@ -48,7 +48,6 @@ app.use(
     secret: "your-secret",
     resave: false,
     saveUninitialized: true,
-    store: MongoStore.create({ mongoUrl: process.env.MONGODB_API_URL }),
     cookie: { secure: true, sameSite: "none", maxAge: 7 * 24 * 60 * 60 * 1000 },
   })
 );
