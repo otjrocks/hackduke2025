@@ -3,6 +3,8 @@ const dotenv = require("dotenv");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const cookieParser = require('cookie-parser');
+const multer = require('multer');
+const path = require('path');
 
 dotenv.config();
 
@@ -20,17 +22,29 @@ main().catch(err => console.log("MongoDB connection error:", err));
 const app = express();
 
 const corsOptions = {
-  origin: "http://localhost:3000",//(https://your-client-app.com)
+  origin: "http://localhost:3000", // (https://your-client-app.com)
   optionsSuccessStatus: 200,
   credentials: true
 };
 
 app.use(cors(corsOptions));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
+app.use('/uploads', express.static('uploads'));
 
-app.use(express.json()) //Add it first then others follow
-app.use(express.urlencoded({ extended: true }))
+// Multer configuration to handle file uploads
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, './uploads'); // Save files in the 'uploads' folder
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + file.originalname); // Use the current timestamp as the filename
+  }
+});
 
-app.use(require('cookie-parser')());
+const upload = multer({ storage: storage });
+
 // Routes
 const user = require("./routes/user");
 const product = require("./routes/product");
@@ -39,6 +53,16 @@ const theme = require("./routes/theme");
 app.use("/user", user);
 app.use("/product", product);
 app.use("/theme", theme);
+
+// Post route for file upload
+app.post("/upload", upload.single('image'), (req, res) => {
+  console.log(req.file); // Log the uploaded file object
+  if (req.file) {
+    res.json({ success: true, fileUrl: `/uploads/${req.file.filename}` }); // Respond with the file URL
+  } else {
+    res.status(400).json({ success: false, message: "Unable to add file" });
+  }
+});
 
 app.listen(PORT, () => {
   console.log(`Server listening on ${PORT}`);
