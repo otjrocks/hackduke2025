@@ -8,10 +8,16 @@ export default function AboutBox() {
             {/* About Us Section */}
             <div id="about" className="about-section">
             <h2>About Us</h2>
+
+            <img 
+                    src="/about-us.jpg" 
+                    alt="Campus Closet Team"
+                    className="about-image"
+            />
             <h3 className="about title">We are college students- Just like you.</h3>
             <p className="about-subtitle">
-                Every college campus has it's own traditions, parties, and unforgettable events. We understand the struggle of constantly finding the perfect outfit for every theme. 
-                That’s why we created Campus Closet—a sustainable way to buy, sell, and rent outfits for every ocassion - from one student to another. A platform built by students, for students.
+                Every college campus has it's own traditions, parties, and unforgettable events. <br />We understand the struggle of constantly finding the perfect outfit for every theme. 
+                <br />That’s why we created Campus Closet—a sustainable way to buy, sell, and rent outfits for every ocassion - from one student to another. A platform built by students, for students.
             </p>
 
             <h3 className="about-heading">Our Mission</h3>
