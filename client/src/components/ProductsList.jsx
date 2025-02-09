@@ -59,7 +59,7 @@ const ProductsList = () => {
                         <p>Size: {product.size}</p>
                         <p>Price: ${product.price}</p>
                         <p>Sold: {product.isSold ? "Yes" : "No"}</p>
-                        {product.image && <img src={product.image} alt={product.name} />}
+                        {product.image && <img src={"http://localhost:3001" + product.image} alt={product.name} />}
                     </div>
                 ))}
             </div>

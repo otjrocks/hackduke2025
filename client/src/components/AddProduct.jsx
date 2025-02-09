@@ -1,75 +1,64 @@
-
 import React, { useState } from "react";
 import axios from "axios";
-import './AddProduct.css'
+import "./AddProduct.css";
 
 export default function AddProduct() {
   const [message, setMessage] = useState("");
-  const [fileUrl, setFileUrl] = useState(""); // State to store uploaded image URL
+  const [fileUrl, setFileUrl] = useState("");
+  const [formData, setFormData] = useState({
+    name: "",
+    image: null,
+    category: "Clothing",
+    size: "M",
+    price: "",
+    theme: "Casual",
+    isSold: false,
+    createdAt: new Date().toISOString().slice(0, 10),
+  });
 
-  const handleFileChange = (e) => {
-    e.persist();
-    const selectedFile = e.target.files[0];
-    if (selectedFile) {
-      uploadImage(selectedFile);
-    }
+  const handleChange = (e) => {
+    const { name, value, type, files } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: type === "file" ? files[0] : value,
+    }));
   };
 
-  // Upload the image
-  const uploadImage = async (file) => {
-    console.log(file);
-    try {
-      const formData = new FormData();
-      formData.append("image", file);
+  const handleFileChange = async (e) => {
+    const selectedFile = e.target.files[0];
+    if (selectedFile) {
+      try {
+        const uploadFormData = new FormData();
+        uploadFormData.append("image", selectedFile);
 
-      const response = await axios.post("http://localhost:3001/upload", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
+        const response = await axios.post("http://localhost:3001/upload", uploadFormData, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
 
-      console.log("File uploaded successfully", response.data);
-      const imageUrl = response.data.fileUrl; // URL of the uploaded image
-      setFileUrl(imageUrl); // Store in state
-      console.log("Image URL:", imageUrl);
-    } catch (error) {
-      console.error("Error uploading image:", error);
+        setFileUrl(response.data.fileUrl);
+        setFormData((prev) => ({ ...prev, image: response.data.fileUrl }));
+      } catch (error) {
+        console.error("Error uploading image:", error);
+      }
     }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    const formData = new FormData(e.target);
-    formData.append("image", fileUrl); // Attach uploaded image URL to form data
-
+    setFormData((prev) => ({ ...prev, image: fileUrl }));
+    console.log(JSON.stringify(formData))
     try {
       const response = await fetch("http://localhost:3001/product/add", {
         method: "POST",
-        body: formData,
+        body: JSON.stringify(formData),
+        headers: { "Content-Type": "application/json" },
         credentials: "include",
       });
       const resData = await response.json();
       console.log(resData);
     } catch (error) {
-      console.log("Request failed:", error);
+      console.error("Request failed:", error);
     }
-  };
-
-  const renderSizeOptions = () => {
-    const sizeOptions = {
-      Clothing: ["XS", "S", "M", "L", "XL", "XXL"],
-      Shoes: ["5", "6", "7", "8", "9", "10", "11", "12", "13"],
-      Dresses: ["S", "M", "L", "XL"],
-      Pants: ["28", "30", "32", "34", "36", "38"],
-      Hats: ["S", "M", "L"],
-    };
-
-    return sizeOptions["Clothing"].map((size) => (
-      <option key={size} value={size}>
-        {size}
-      </option>
-    ));
   };
 
   return (
@@ -78,17 +67,14 @@ export default function AddProduct() {
       {message && <p className="message">{message}</p>}
       <form onSubmit={handleSubmit}>
         <label>Name:</label>
-        <input type="text" name="name" required />
+        <input type="text" name="name" value={formData.name} onChange={handleChange} required />
 
         <label>Image:</label>
         <input type="file" name="image" accept="image/*" onChange={handleFileChange} required />
-
-        {/* Display the uploaded image preview */}
-        {fileUrl}
-        {fileUrl && <img src={fileUrl} alt="Uploaded Preview" style={{ width: "100px", marginTop: "10px" }} />}
+        {fileUrl && <img src={"http://localhost:3001" + fileUrl} alt="Uploaded Preview" style={{ width: "100%", marginTop: "10px" }} />}
 
         <label>Category:</label>
-        <select name="category">
+        <select name="category" value={formData.category} onChange={handleChange}>
           <option value="Clothing">Clothing</option>
           <option value="Shoes">Shoes</option>
           <option value="Dresses">Dresses</option>
@@ -97,13 +83,17 @@ export default function AddProduct() {
         </select>
 
         <label>Size:</label>
-        <select name="size">{renderSizeOptions()}</select>
+        <select name="size" value={formData.size} onChange={handleChange}>
+          {(["XS", "S", "M", "L", "XL", "XXL"]).map((size) => (
+            <option key={size} value={size}>{size}</option>
+          ))}
+        </select>
 
         <label>Price ($):</label>
-        <input type="number" name="price" required />
+        <input type="number" name="price" value={formData.price} onChange={handleChange} required />
 
         <label>Theme:</label>
-        <select name="theme">
+        <select name="theme" value={formData.theme} onChange={handleChange}>
           <option value="Duke Basketball">Duke Basketball</option>
           <option value="Professional">Professional Attire</option>
           <option value="Spring Break">Spring Break</option>
@@ -117,9 +107,7 @@ export default function AddProduct() {
           <option value="Duke Game Days">Duke Merch</option>
           <option value="Cowboy">Cowboy</option>
           <option value="Christmas">Christmas</option>
-          <option value="Tropical">Tropical</option>
           <option value="Valentines">Valentines</option>
-    
         </select>
 
         <button type="submit">Add Product</button>

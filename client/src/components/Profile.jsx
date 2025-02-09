@@ -55,12 +55,12 @@ export default function Profile() {
     window.location.href = 'http://localhost:3001/user/logout';
   };
   
-  if (!userInfo) {
-    return <div>Loading...</div>;
-  }
 
   return (
     <>
+    {
+      userInfo ?
+      <>
       <Header />
       <div className="main-content">
         <div className="profile-header">
@@ -82,7 +82,7 @@ export default function Profile() {
           <ul className="product-list">
             {products.map((product) => (
               <li key={product._id} className="product-item">
-                <img src={product.image} alt={product.name} className="product-image" />
+                <img src={"http://localhost:3001" + product.image} alt={product.name} className="product-image" />
                 <div>
                   <h3>{product.name}</h3>
                   <p>Size: {product.size}</p>
@@ -94,6 +94,15 @@ export default function Profile() {
           </ul>
         )}
       </div>
+    </> :
+    <>
+    <Header />
+    <div className='main-content'>
+    <h2>You are not logged in and cannot view the profile</h2>
+    <Link onClick={() => window.location.href = 'http://localhost:3001/user/login'}><button>login</button></Link>
+    </div>
+    </>
+    }
     </>
   );
 }
