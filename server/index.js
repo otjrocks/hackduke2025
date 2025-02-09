@@ -43,20 +43,15 @@ const upload = multer({ storage: storage });
 const session = require('express-session');
 
 
-app.set('trust proxy', 1);
-
-app.use(session({
-  secret: "justus_secret",
-  saveUninitialized: false,
-  resave: false,
-  proxy: true,
-  store: store,
-  sameSite: 'none',
-  cookie: {
-    secure: true,
-    maxAge: 360000,
-  }
-}));
+app.use(
+  session({
+    secret: "your-secret",
+    resave: false,
+    saveUninitialized: true,
+    store: MongoStore.create({ mongoUrl: process.env.MONGODB_API_URL }),
+    cookie: { secure: true, sameSite: "none", maxAge: 7 * 24 * 60 * 60 * 1000 },
+  })
+);
 
 app.use(cors({
   origin: 'https://hackduke2025.vercel.app', // Allow only your frontend
