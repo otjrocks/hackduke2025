@@ -60,11 +60,26 @@ export default function Profile() {
   const handleLogout = () => {
     window.location.href = 'http://localhost:3001/user/logout';
   };
-  
+
+ // Function to handle the deletion of a product
+ const handleDelete = async (productId) => {
+  try {
+    const response = await axios.delete(`http://localhost:3001/product/delete/${productId}`);
+    if (response.data.success) {
+      setMessage("Product deleted successfully!");
+      // Remove the deleted product from the list
+      setProducts((prevProducts) => prevProducts.filter((product) => product._id !== productId));
+    } else {
+      setMessage("Failed to delete product.");  }
+    } catch (error) {
+      setMessage("Error deleting product.");
+    }
+  };
+ 
 
   return (
     <>
-      {userInfo ? (
+      {userInfo ? 
         <>
           <Header />
           <div className="main-content">
@@ -93,8 +108,11 @@ export default function Profile() {
                   <p>Size: {product.size}</p>
                   <p>Price: ${product.price}</p>
                   <p>Status: {product.isSold ? 'Sold' : 'Available'}</p>
+                  <button onClick={() => handleDelete(product._id)} className="delete-button">
+                  Delete
+                </button>
                 </div>
-              </li>
+                </li>
             ))}
           </ul>
         )}
