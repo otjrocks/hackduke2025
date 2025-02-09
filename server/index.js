@@ -50,14 +50,11 @@ const session = require('express-session');
 
 app.use(
   session({
-    secret: "your-secret-key",
+    secret: "your-secret",
     resave: false,
     saveUninitialized: true,
-    cookie: {
-      secure: true, // Required for HTTPS on production
-      httpOnly: true,
-      sameSite: "none", // Important for cross-site cookies
-    },
+    store: MongoStore.create({ mongoUrl: process.env.MONGODB_URL }),
+    cookie: { secure: true, sameSite: "none" },
   })
 );
 
