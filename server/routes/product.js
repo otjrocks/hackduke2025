@@ -46,11 +46,6 @@ router.get("/get/:theme", (req, res) => {
 router.post("/add", checkAuthentication, (req, res) => {
     async function updateProduct(req, res) {  
         try {
-            // Validate the image URL
-            const isImage = await isImageURL(req.body.image);
-            if (!isImage) {
-                req.body.image = '';
-            }
 
             // Lookup theme by name (using Theme schema)
             let theme = await Theme.findOne({ name: req.body.theme });
@@ -82,7 +77,7 @@ router.post("/add", checkAuthentication, (req, res) => {
                 },
                 { new: true, upsert: true } // upsert will create a new product if it does not exist
             );
-
+            console.log("Success! added product")
             res.json({ success: true, authenticated: true, product: product });
         } catch (err) {
             console.log(err);
