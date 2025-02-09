@@ -54,8 +54,13 @@ export default function AddProduct() {
         headers: { "Content-Type": "application/json" },
         credentials: "include",
       });
-      const resData = await response.json();
-      console.log(resData);
+      const data = await response.json();
+      if (data.success) {
+        window.location.href = 'http://localhost:3000/profile'
+      } else {
+        setMessage(data.message)
+      }
+      console.log(await response.json());
     } catch (error) {
       console.error("Request failed:", error);
     }
