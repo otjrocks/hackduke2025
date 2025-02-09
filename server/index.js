@@ -74,7 +74,7 @@ app.use("/product", product);
 app.use("/theme", theme);
 
 // Post route for file upload
-app.post("/upload", async (req, res) => {
+app.post("/upload", upload.single("image"), async (req, res) => {
   try {
     if (!req.file) {
       return res.status(400).json({ success: false, message: "No file uploaded" });
@@ -95,3 +95,7 @@ app.post("/upload", async (req, res) => {
   }
 });
 
+
+app.listen(PORT, () => {
+  console.log(`Server listening on ${PORT}`);
+});
