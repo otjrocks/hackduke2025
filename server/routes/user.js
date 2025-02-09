@@ -79,16 +79,16 @@ router.get('/userinfo', async (req, res) => {
 
     req.session.user = response.data;
     // Store user info in session for future requests
-    await new Promise((resolve, reject) => {
-      req.session.save(err => {
-        if (err) {
-          console.log("Session save error:", err);
-          reject(err);
-        } else {
-          resolve();
-        }
-      });
-    });
+    // await new Promise((resolve, reject) => {
+    //   req.session.save(err => {
+    //     if (err) {
+    //       console.log("Session save error:", err);
+    //       reject(err);
+    //     } else {
+    //       resolve();
+    //     }
+    //   });
+    // });
   } catch (error) {
     console.log(error);
     res.json({ success: false, authenticated: false, message: 'Invalid user token.' });

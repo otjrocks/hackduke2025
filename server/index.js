@@ -63,7 +63,7 @@ app.use(
 );
 
 app.use(cors({
-  origin: 'https://hackduke2025.vercel.app', // Allow only your frontend
+  origin: process.env.CLIENT_URL, // Allow only your frontend
   credentials: true, // Allow cookies/auth headers
 }));
 
