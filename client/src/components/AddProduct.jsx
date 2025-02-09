@@ -31,7 +31,7 @@ export default function AddProduct() {
         const uploadFormData = new FormData();
         uploadFormData.append("image", selectedFile);
 
-        const response = await axios.post("http://localhost:3001/upload", uploadFormData, {
+        const response = await axios.post(process.env.REACT_APP_SERVER_URL + "/upload", uploadFormData, {
           headers: { "Content-Type": "multipart/form-data" },
         });
 
@@ -48,7 +48,7 @@ export default function AddProduct() {
     setFormData((prev) => ({ ...prev, image: fileUrl }));
     console.log(JSON.stringify(formData))
     try {
-      const response = await fetch("http://localhost:3001/product/add", {
+      const response = await fetch(process.env.REACT_APP_SERVER_URL + "/product/add", {
         method: "POST",
         body: JSON.stringify(formData),
         headers: { "Content-Type": "application/json" },
@@ -76,7 +76,7 @@ export default function AddProduct() {
 
         <label>Image:</label>
         <input type="file" name="image" accept="image/*" onChange={handleFileChange} required />
-        {fileUrl && <img src={"http://localhost:3001" + fileUrl} alt="Uploaded Preview" style={{ width: "100%", marginTop: "10px" }} />}
+        {fileUrl && <img src={process.env.REACT_APP_SERVER_URL + fileUrl} alt="Uploaded Preview" style={{ width: "100%", marginTop: "10px" }} />}
 
         <label>Category:</label>
         <select name="category" value={formData.category} onChange={handleChange}>

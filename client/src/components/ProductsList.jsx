@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import Header from "./Header";
 
 const ProductsList = () => {
     const { theme } = useParams();
@@ -11,7 +12,7 @@ const ProductsList = () => {
         const fetchProducts = async () => {
             try {
                 // Fetch products by theme using fetch API
-                const response = await fetch(`http://localhost:3001/product/get/${theme}`);
+                const response = await fetch(process.env.REACT_APP_SERVER_URL + `/product/get/${theme}`);
 
                 // Check if the response is successful
                 if (response.ok) {
@@ -44,10 +45,12 @@ const ProductsList = () => {
     }
 
     return (
-        <div>
+        <>
+        <Header />
+        <div className="main-content">
             {products.length < 1 ? (
                 <>
-                    Sorry, there are no products for the theme {theme}!
+                    <h2>Sorry, there are no products for the theme {theme}!</h2>
                 </>
             ) : (
                 <>
@@ -60,7 +63,7 @@ const ProductsList = () => {
                                 <p>Price: ${product.price}</p>
                                 <p>Sold: {product.isSold ? "Yes" : "No"}</p>
                                 {product.image && (
-                                    <img src={`http://localhost:3001${product.image}`} alt={product.name} />
+                                    <img src={process.env.REACT_APP_SERVER_URL + `/uploads/${product.image}`} alt={product.name} />
                                 )}
                             </div>
                         ))}
@@ -68,6 +71,7 @@ const ProductsList = () => {
                 </>
             )}
         </div>
+        </>
     );
 };
 

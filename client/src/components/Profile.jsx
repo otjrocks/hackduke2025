@@ -17,7 +17,7 @@ export default function Profile() {
       setError(null);
       
       try {
-        const response = await axios.get('http://localhost:3001/user/userinfo', {
+        const response = await axios.get(process.env.REACT_APP_SERVER_URL + '/user/userinfo', {
           withCredentials: true,
         });
 
@@ -37,7 +37,7 @@ export default function Profile() {
 
     const fetchUserProducts = async (email) => {
       try {
-        const response = await axios.get(`http://localhost:3001/product/get/email/${email}`, {
+        const response = await axios.get(process.env.REACT_APP_SERVER_URL + `/product/get/email/${email}`, {
           withCredentials: true,
         });
 
@@ -58,13 +58,13 @@ export default function Profile() {
   }, []); // Runs every time the page is loaded
 
   const handleLogout = () => {
-    window.location.href = 'http://localhost:3001/user/logout';
+    window.location.href = process.env.REACT_APP_SERVER_URL + '/user/logout';
   };
 
  // Function to handle the deletion of a product
  const handleDelete = async (productId) => {
   try {
-    const response = await axios.delete(`http://localhost:3001/product/delete/${productId}`);
+    const response = await axios.delete(process.env.REACT_APP_SERVER_URL + `/product/delete/${productId}`);
     if (response.data.success) {
       setMessage("Product deleted successfully!");
       // Remove the deleted product from the list
@@ -102,7 +102,7 @@ export default function Profile() {
           <ul className="product-list">
             {products.map((product) => (
               <li key={product._id} className="product-item">
-                <img src={"http://localhost:3001" + product.image} alt={product.name} className="product-image" />
+                <img src={process.env.REACT_APP_SERVER_URL + product.image} alt={product.name} className="product-image" />
                 <div>
                   <h3>{product.name}</h3>
                   <p>Size: {product.size}</p>
@@ -122,7 +122,7 @@ export default function Profile() {
     <Header />
     <div className='main-content'>
     <h2>You are not logged in and cannot view the profile</h2>
-    <Link onClick={() => window.location.href = 'http://localhost:3001/user/login'}><button>login</button></Link>
+    <Link onClick={() => window.location.href = process.env.REACT_APP_SERVER_URL + '/user/login'}><button>login</button></Link>
     </div>
     </>
     }
