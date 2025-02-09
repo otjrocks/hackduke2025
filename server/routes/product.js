@@ -89,7 +89,7 @@ router.post("/add", checkAuthentication, (req, res) => {
                 },
                 { new: true, upsert: true } // upsert will create a new product if it does not exist
             );
-            console.log("Success! added product")
+            console.log("Success! added product");
             res.json({ success: true, authenticated: true, product: product });
         } catch (err) {
             console.log(err);

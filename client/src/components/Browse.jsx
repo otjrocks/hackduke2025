@@ -33,7 +33,7 @@ export default function Browse() {
         <>
         <Header />
         <div className="browse-container">
-            <h1>Browse Party Themes</h1>
+            <h1>Browse Themes</h1>
             {error ? (
                 <p className="error">{error}</p>
             ) : (

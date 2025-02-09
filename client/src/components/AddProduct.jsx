@@ -113,6 +113,7 @@ export default function AddProduct() {
           <option value="Cowboy">Cowboy</option>
           <option value="Christmas">Christmas</option>
           <option value="Valentines">Valentines</option>
+          <option value="Intramural Sports">Intramural Sports</option>
         </select>
 
         <button type="submit">Add Product</button>
