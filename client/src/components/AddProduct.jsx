@@ -104,11 +104,22 @@ export default function AddProduct() {
 
         <label>Theme:</label>
         <select name="theme">
-          <option value="Casual">Casual</option>
+          <option value="Duke Basketball">Duke Basketball</option>
+          <option value="Professional">Professional Attire</option>
+          <option value="Spring Break">Spring Break</option>
+          <option value="Tropical">Tropical</option>
+          <option value="Duo's">Duo Costumes</option>
+          <option value="Formals">Formals</option>
           <option value="Woodstock">Woodstock</option>
-          <option value="African Wedding">African Wedding</option>
-          <option value="Diwali">Diwali</option>
           <option value="Oktoberfest">Oktoberfest</option>
+          <option value="Halloween">Halloween</option>
+          <option value="Disco">Disco</option>
+          <option value="Duke Game Days">Duke Merch</option>
+          <option value="Cowboy">Cowboy</option>
+          <option value="Christmas">Christmas</option>
+          <option value="Tropical">Tropical</option>
+          <option value="Valentines">Valentines</option>
+    
         </select>
 
         <button type="submit">Add Product</button>

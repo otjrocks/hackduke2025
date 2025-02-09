@@ -7,7 +7,7 @@ const ProductsList = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
 
-    useEffect(() => {
+    useEffect(() => {
         const fetchProducts = async () => {
             try {
                 // Fetch products by theme using fetch API
