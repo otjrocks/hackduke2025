@@ -22,7 +22,7 @@ main().catch(err => console.log("MongoDB connection error:", err));
 const app = express();
 
 const corsOptions = {
-  origin: "http://localhost:3000", // (https://your-client-app.com)
+  origin: process.env.CLIENT_URL, // (https://your-client-app.com)
   optionsSuccessStatus: 200,
   credentials: true
 };
