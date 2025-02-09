@@ -48,12 +48,18 @@ const upload = multer({ storage: storage });
 
 const session = require('express-session');
 
-app.use(session({
-  secret: 'your-secret-key', // Use a strong secret
-  resave: false,
-  saveUninitialized: true,
-  cookie: { secure: false } // Set `secure: true` if you're using HTTPS
-}));
+app.use(
+  session({
+    secret: "your-secret-key",
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+      secure: true, // Required for HTTPS on production
+      httpOnly: true,
+      sameSite: "none", // Important for cross-site cookies
+    },
+  })
+);
 
 // Routes
 const user = require("./routes/user");
