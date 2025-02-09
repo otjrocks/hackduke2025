@@ -81,7 +81,7 @@ app.post("/upload", upload.single("image"), async (req, res) => {
     const blob = await put(fileName, fileBuffer, {
       access: "public", // Makes the file publicly accessible
     });
-
+    console.log(blob.url);
     res.json({ success: true, fileUrl: blob.url }); // Return file URL
   } catch (error) {
     console.error("Upload error:", error);

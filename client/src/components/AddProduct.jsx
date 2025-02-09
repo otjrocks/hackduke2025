@@ -101,7 +101,7 @@ export default function AddProduct() {
 
         <label>Image:</label>
         <input type="file" name="image" accept="image/*" onChange={handleFileChange} required />
-        {fileUrl && <img src={process.env.REACT_APP_SERVER_URL + fileUrl} alt="Uploaded Preview" style={{ width: "100%", marginTop: "10px" }} />}
+        {fileUrl && <img src={fileUrl} alt="Uploaded Preview" style={{ width: "100%", marginTop: "10px" }} />}
 
         <label>Category:</label>
         <select name="category" value={formData.category} onChange={handleChange}>
