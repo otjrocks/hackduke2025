@@ -2,9 +2,11 @@ const express = require("express");
 const dotenv = require("dotenv");
 const mongoose = require("mongoose");
 const cors = require("cors");
-const cookieParser = require('cookie-parser');
-const multer = require('multer');
+const cookieParser = require("cookie-parser");
+const multer = require("multer");
 const { put } = require("@vercel/blob");
+const session = require("express-session");
+const MongoDBStore = require("connect-mongodb-session")(session);
 
 dotenv.config();
 
@@ -21,51 +23,43 @@ main().catch(err => console.log("MongoDB connection error:", err));
 
 const app = express();
 
+// CORS Configuration
 const corsOptions = {
-  origin: process.env.CLIENT_URL, // (https://your-client-app.com)
-  credentials: true
+  origin: process.env.CLIENT_URL, // Allow only your frontend
+  credentials: true, // Allow cookies/auth headers
 };
+app.use(cors(corsOptions)); // Apply CORS early
 
-app.use(cors(corsOptions)); // TODO: CHANGE DANGEROUS 
+// Built-in Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
-app.use('/uploads', express.static('uploads'));
+app.use("/uploads", express.static("uploads"));
 
-// Multer configuration to handle file uploads
-// Use memory storage (store file in RAM before uploading to Vercel Blob)
-const storage = multer.memoryStorage();
-
-const upload = multer({ storage: storage });
-
-
-const session = require('express-session');
-const MongoDBStore = require('connect-mongodb-session')(session);
-
-var store = new MongoDBStore({
+// Session Store (MongoDB)
+const store = new MongoDBStore({
   uri: process.env.MONGODB_API_URL,
-  collection: 'sessions'
+  collection: "sessions",
 });
 
-// Catch errors
-store.on('error', function(error) {
-  console.log(error);
+store.on("error", function (error) {
+  console.log("Session Store Error:", error);
 });
 
+// **Session Middleware (MUST be before routes)**
 app.use(
   session({
-    secret: "your-secret",
+    secret: process.env.SESSION_SECRET || "your-secret",
     resave: false,
-    saveUninitialized: true,
+    saveUninitialized: false,
     cookie: { secure: true, sameSite: "none", maxAge: 7 * 24 * 60 * 60 * 1000 },
     store: store,
   })
 );
 
-app.use(cors({
-  origin: process.env.CLIENT_URL, // Allow only your frontend
-  credentials: true, // Allow cookies/auth headers
-}));
+// Multer Storage (for file uploads)
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
 
 // Routes
 const user = require("./routes/user");
@@ -76,29 +70,30 @@ app.use("/user", user);
 app.use("/product", product);
 app.use("/theme", theme);
 
-// Post route for file upload
+// Upload Route (File Uploads)
 app.post("/upload", upload.single("image"), async (req, res) => {
   try {
     if (!req.file) {
       return res.status(400).json({ success: false, message: "No file uploaded" });
     }
 
-    const fileBuffer = req.file.buffer; // Get file as buffer
+    const fileBuffer = req.file.buffer;
     const fileName = `${Date.now()}-${req.file.originalname}`;
 
     // Upload file to Vercel Blob
     const blob = await put(fileName, fileBuffer, {
       access: "public", // Makes the file publicly accessible
     });
-    console.log(blob.url);
-    res.json({ success: true, fileUrl: blob.url }); // Return file URL
+
+    console.log("File Uploaded:", blob.url);
+    res.json({ success: true, fileUrl: blob.url });
   } catch (error) {
     console.error("Upload error:", error);
     res.status(500).json({ success: false, message: "Upload failed" });
   }
 });
 
-
+// Start Server
 app.listen(PORT, () => {
   console.log(`Server listening on ${PORT}`);
 });
