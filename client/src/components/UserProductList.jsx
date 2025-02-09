@@ -11,7 +11,7 @@ export default function UserProductList({ email }) {
 
     const fetchUserProducts = async () => {
       try {
-        const response = await axios.get(`http://localhost:3001/products/get-by-email/${email}`, {
+        const response = await axios.get(process.env.REACT_APP_SERVER_URL + `/products/get-by-email/${email}`, {
           withCredentials: true,
         });
 
