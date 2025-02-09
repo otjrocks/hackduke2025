@@ -42,6 +42,18 @@ router.get("/get/:theme", (req, res) => {
     })
 });
 
+router.delete("/delete/:_id", async(req, res)=>{
+    try {
+        const { _id } = req.params;
+        const deletedProduct = await Product.findByIdAndDelete(_id);
+        if (!deletedProduct) {
+            return res.status(404).json({ success: false, message: "Product not found" });
+          }
+          res.json({ success: true, message: "Product deleted successfully" });
+    } catch (error) {
+        res.status(500).json({ success: false, message: "Error deleting product" });
+    }
+})
 
 router.post("/add", checkAuthentication, (req, res) => {
     async function updateProduct(req, res) {  
