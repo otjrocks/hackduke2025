@@ -9,8 +9,8 @@ router.use(cookieParser());
 const AUTH0_DOMAIN = process.env.AUTH0_DOMAIN;
 const AUTH0_CLIENT_ID = process.env.AUTH0_CLIENT_ID;
 const AUTH0_CLIENT_SECRET = process.env.AUTH0_CLIENT_SECRET;
-const AUTH0_CALLBACK_URL = process.env.REACT_APP_SERVER_URL + '/user/callback';
-const AUTH0_LOGOUT_URL = process.env.REACT_APP_CLIENT_URL;
+const AUTH0_CALLBACK_URL = process.env.SERVER_URL + '/user/callback';
+const AUTH0_LOGOUT_URL = process.env.CLIENT_URL;
 
 // 1. Redirect User to Auth0 Login Page
 router.get('/login', (req, res) => {
