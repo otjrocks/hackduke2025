@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import './Home.css';
 import Header from "./components/Header";
-import Footer from "./components/Footer";
 import AboutBox from "./components/AboutBox";
 
 export default function Home() {
@@ -46,7 +45,6 @@ export default function Home() {
             </div>
 
             <AboutBox />
-            <Footer />
         </div>
     );
 }

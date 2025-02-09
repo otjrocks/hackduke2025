@@ -58,3 +58,9 @@
         font-size: 0.9rem;
     }
 }
+
+.product-item p {
+    margin: 2px 0; /* Reduce vertical spacing */
+    font-size: 0.9rem; /* Optional: Adjust font size if needed */
+    line-height: 1.2; /* Reduce line height */
+}
