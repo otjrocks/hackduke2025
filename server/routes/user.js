@@ -59,12 +59,13 @@ router.get('/logout', (req, res) => {
 // 4. Get User Info (Cache User Info for Subsequent Requests)
 router.get('/userinfo', async (req, res) => {
   const token = req.cookies.token;
-  console.log(token);
+  console.log("Token: " + token);
   console.log("Session: ", req.session);
+  console.log(req.session);
+  console.log(req.session.user);
 
   // Check if user info is already cached in session
   if (req.session.user) {
-    console.log(req.session.user);
     return res.json({ success: true, authenticated: true, user: req.session.user });
   }
 
@@ -81,13 +82,15 @@ router.get('/userinfo', async (req, res) => {
     // Store user info in session for future requests
     req.session.save(err => {
       if (err) {
-        console.log(err);
+        // console.log(err);
+      } else {
+        console.log("SAVE COMPLETE");
       }
     });
 
     res.json({ success: true, authenticated: true, user: response.data });
   } catch (error) {
-    console.log(error);
+    // console.log(error);
     res.json({ success: false, authenticated: false, message: 'Invalid user token.' });
   }
 });
