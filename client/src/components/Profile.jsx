@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import Header from './Header';
-import Footer from './Footer';
 
 export default function Profile() {
   const [userInfo, setUserInfo] = useState(null);
@@ -45,7 +44,6 @@ export default function Profile() {
         <h2>{error}</h2>
         <button onClick={() => window.location.href = 'http://localhost:3001/user/login'}>Go to Login</button>
       </div>
-      <Footer />
       </>
     );
   }
@@ -74,7 +72,7 @@ export default function Profile() {
   <h1></h1>
   <button className="logout-btn" onClick={handleLogout}>Logout</button>
 </div>
-<Footer/>
+
     </>
 
   );

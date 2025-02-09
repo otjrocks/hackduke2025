@@ -30,25 +30,25 @@ export default function Header() {
             checkAuthentication();
         }, []); // Empty dependency array ensures this effect runs once on component mount
 
-    return (
-        <header className="header">
-            <Link to="/"><div className="app-name">Campus Closet</div></Link>
-            <nav className="navigation">
-                <ul>
-                    <li><Link to="/">home</Link></li>
-                    <li><Link to="/browse">browse</Link></li>
-                    <li><Link to="/about">about</Link></li>
-                    <li><Link to="/profile">profile</Link></li>
-                    {
-                        isLoggedIn ?
-                        <li><Link onClick={() => window.location.href = 'http://localhost:3001/user/logout'}>logout</Link></li>
-                        :
-                        <li><Link onClick={() => window.location.href = 'http://localhost:3001/user/login'}>login</Link></li>
-
-
-                    }
-                </ul>
-            </nav>
-        </header>
-    );
+        return (
+            <header className="header">
+                <Link to="/"><div className="app-name">Campus Closet</div></Link>
+                <nav className="navigation">
+                    <ul>
+                        <li><Link to="/">home</Link></li>
+                        <li><Link to="/about">about</Link></li>
+                        <li><Link to="/browse">browse</Link></li>
+                        
+                        {isLoggedIn ? (
+                            <>
+                                <li><Link to="/profile">profile</Link></li>
+                                <li><Link onClick={() => window.location.href = 'http://localhost:3001/user/logout'}>logout</Link></li>
+                            </>
+                        ) : (
+                            <li><Link onClick={() => window.location.href = 'http://localhost:3001/user/login'}>login</Link></li>
+                        )}
+                    </ul>
+                </nav>
+            </header>
+        );
 }

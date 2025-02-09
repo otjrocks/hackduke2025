@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Browse.css"; // ✅ Make sure Browse.css handles styling
 import Header from "./Header";
-import Footer from "./Footer";
 
 export default function Browse() {
     const [themes, setThemes] = useState([]);
@@ -51,7 +50,6 @@ export default function Browse() {
                 </div>
             )}
         </div>
-        <Footer />
         </>
     );
 }
