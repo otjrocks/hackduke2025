@@ -34,14 +34,8 @@ app.use(cookieParser());
 app.use('/uploads', express.static('uploads'));
 
 // Multer configuration to handle file uploads
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, './uploads'); // Save files in the 'uploads' folder
-  },
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + file.originalname); // Use the current timestamp as the filename
-  }
-});
+// Use memory storage (store file in RAM before uploading to Vercel Blob)
+const storage = multer.memoryStorage();
 
 const upload = multer({ storage: storage });
 
