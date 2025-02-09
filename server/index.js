@@ -5,6 +5,7 @@ const cors = require("cors");
 const cookieParser = require('cookie-parser');
 const multer = require('multer');
 const MongoStore = require("connect-mongo");
+const { put } = require("@vercel/blob");
 
 dotenv.config();
 
@@ -73,15 +74,24 @@ app.use("/product", product);
 app.use("/theme", theme);
 
 // Post route for file upload
-app.post("/upload", upload.single('image'), (req, res) => {
-  console.log(req.file); // Log the uploaded file object
-  if (req.file) {
-    res.json({ success: true, fileUrl: `/uploads/${req.file.filename}` }); // Respond with the file URL
-  } else {
-    res.status(400).json({ success: false, message: "Unable to add file" });
+app.post("/upload", async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ success: false, message: "No file uploaded" });
+    }
+
+    const fileBuffer = req.file.buffer; // Get file as buffer
+    const fileName = `${Date.now()}-${req.file.originalname}`;
+
+    // Upload file to Vercel Blob
+    const blob = await put(fileName, fileBuffer, {
+      access: "public", // Makes the file publicly accessible
+    });
+
+    res.json({ success: true, fileUrl: blob.url }); // Return file URL
+  } catch (error) {
+    console.error("Upload error:", error);
+    res.status(500).json({ success: false, message: "Upload failed" });
   }
 });
 
-app.listen(PORT, () => {
-  console.log(`Server listening on ${PORT}`);
-});
