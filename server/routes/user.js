@@ -60,7 +60,8 @@ router.get('/logout', (req, res) => {
 router.get('/userinfo', async (req, res) => {
   const token = req.cookies.token;
   console.log(token);
-
+  console.log("Session: ", req.session);
+  
   // Check if user info is already cached in session
   if (req.session.user) {
     console.log(req.session.user);
