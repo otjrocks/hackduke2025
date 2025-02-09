@@ -4,7 +4,7 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const cookieParser = require('cookie-parser');
 const multer = require('multer');
-const path = require('path');
+const MongoStore = require("connect-mongo");
 
 dotenv.config();
 
@@ -48,12 +48,13 @@ const upload = multer({ storage: storage });
 
 const session = require('express-session');
 
+
 app.use(
   session({
     secret: "your-secret",
     resave: false,
     saveUninitialized: true,
-    store: MongoStore.create({ mongoUrl: process.env.MONGODB_URL }),
+    store: MongoStore.create({ mongoUrl: process.env.MONGODB_API_URL }),
     cookie: { secure: true, sameSite: "none" },
   })
 );
