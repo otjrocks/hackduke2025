@@ -4,7 +4,6 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const cookieParser = require('cookie-parser');
 const multer = require('multer');
-const MongoStore = require("connect-mongo");
 const { put } = require("@vercel/blob");
 
 dotenv.config();
@@ -41,14 +40,24 @@ const upload = multer({ storage: storage });
 
 
 const session = require('express-session');
+const MongoDBStore = require('connect-mongodb-session')(session);
 
+var store = new MongoDBStore({
+  uri: process.env.MONGODB_API_URL,
+  collection: 'sessions'
+});
+
+// Catch errors
+store.on('error', function(error) {
+  console.log(error);
+});
 
 app.use(
   session({
     secret: "your-secret",
     resave: false,
     saveUninitialized: true,
-    store: MongoStore.create({ mongoUrl: process.env.MONGODB_API_URL }),
+    store: store,
     cookie: { secure: true, sameSite: "none", maxAge: 7 * 24 * 60 * 60 * 1000 },
   })
 );
