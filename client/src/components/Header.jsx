@@ -12,6 +12,9 @@ export default function Header() {
                     const response = await fetch(process.env.REACT_APP_SERVER_URL + '/user/userinfo', {
                         method: 'GET',
                         credentials: 'include', // Make sure credentials (cookies) are sent with the request
+                        headers: {
+                            "Content-Type": "application/json",
+                          },
                     });
                     console.log(process.env.REACT_APP_SERVER_URL + '/user/userinfo');
                     const data = await response.json();
