@@ -12,7 +12,7 @@ export default function AddProduct() {
     category: "Clothing",
     size: "M",
     price: "",
-    theme: "Casual",
+    theme: "Duke Basketball",
     isSold: false,
     createdAt: new Date().toISOString().slice(0, 10),
   });
@@ -57,7 +57,7 @@ export default function AddProduct() {
       });
       const data = await response.json();
       if (data.success) {
-        window.location.href = 'http://localhost:3000/profile'
+        window.location.href = process.env.REACT_APP_CLIENT_URL + "/profile"
       } else {
         setMessage(data.message)
       }
