@@ -1,28 +1,29 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import Header from './Header';
+import { Link } from 'react-router-dom';
+import './Profile.css';
 
 export default function Profile() {
   const [userInfo, setUserInfo] = useState(null);
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        // Make request to the backend to fetch user data
         const response = await axios.get('http://localhost:3001/user/userinfo', {
-          withCredentials: true, // Include cookies for session management
+          withCredentials: true,
         });
 
         if (response.data.success) {
-          // User is authenticated, set user info
           setUserInfo(response.data.user);
+          fetchUserProducts(response.data.user.email);
         } else {
-          // If not authenticated, set error message
           setError(response.data.message || 'User not authenticated');
         }
       } catch (err) {
-        // Handle any errors during the fetch
         console.error('Error fetching user data:', err);
         setError('Failed to fetch user info');
       }
@@ -31,53 +32,80 @@ export default function Profile() {
     fetchUserData();
   }, []);
 
-  const handleLogout = () => {
-    // Redirect to logout route to clear cookies and session
-    window.location.href = 'http://localhost:3001/user/logout'; // Full URL for logout
+  const fetchUserProducts = async (email) => {
+    try {
+      const response = await axios.get(`http://localhost:3001/products/get/email/${email}`, {
+        withCredentials: true,
+      });
+
+      if (response.data.success) {
+        setProducts(response.data.products);
+      } else {
+        setError(response.data.message || 'No products found.');
+      }
+    } catch (err) {
+      console.error('Error fetching products:', err);
+      setError('Failed to fetch products.');
+    } finally {
+      setLoading(false);
+    }
   };
 
-  if (error) {
-    return (
-      <>
-      <Header />
-      <div className="main-content">
-        <h2>{error}</h2>
-        <button onClick={() => window.location.href = 'http://localhost:3001/user/login'}>Go to Login</button>
-      </div>
-      </>
-    );
-  }
+  const handleLogout = () => {
+    window.location.href = 'http://localhost:3001/user/logout';
+  };
+
+  // if (error) {
+  //   return (
+  //     <>
+  //       <Header />
+  //       <div className="main-content">
+  //         <h2>{error}</h2>
+  //         <button onClick={() => window.location.href = 'http://localhost:3001/user/login'}>Go to Login</button>
+  //       </div>
+  //     </>
+  //   );
+  // }
 
   if (!userInfo) {
-    return <div>Loading...</div>; // Show loading state while waiting for user data
+    return <div>Loading...</div>;
   }
 
   return (
     <>
-    <Header />
-    <div className="main-content">
-  <div className="profile-header">
-    <h1>Welcome, {userInfo.nickname}!</h1>
-    <p className="greeting">You're logged in as {userInfo.email}</p>
-  </div>
+      <Header />
+      <div className="main-content">
+        <div className="profile-header">
+          <h1>Welcome, {userInfo.nickname}!</h1>
+          <p className="greeting">You're logged in as {userInfo.email}</p>
+        </div>
 
-  <div className="profile-details">
-    <div className="detail">
-      <strong>Email:</strong> <span>{userInfo.email}</span>
-    </div>
-    <div className="detail">
-      <strong>Nickname:</strong> <span>{userInfo.nickname || 'N/A'}</span>
-    </div>
-  </div>
-  <h1></h1>
-  <button className="logout-btn" onClick={handleLogout}>Logout</button>
-</div>
+        <Link to="/addproduct">
+          <button className="logout-btn">Add New Product</button>
+        </Link>
+        <button className="logout-btn" onClick={handleLogout}>Logout</button>
 
+        <h2>Your Products</h2>
+        {loading ? (
+          <p>Loading products...</p>
+        ) : products.length === 0 ? (
+          <p>No products found.</p>
+        ) : (
+          <ul className="product-list">
+            {products.map((product) => (
+              <li key={product._id} className="product-item">
+                <img src={product.image} alt={product.name} className="product-image" />
+                <div>
+                  <h3>{product.name}</h3>
+                  <p>Size: {product.size}</p>
+                  <p>Price: ${product.price}</p>
+                  <p>Status: {product.isSold ? 'Sold' : 'Available'}</p>
+                </div>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
     </>
-
   );
 }
-
-
-
-
