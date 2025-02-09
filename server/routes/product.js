@@ -6,6 +6,25 @@ const Theme = require('../models/theme');
 const isImageURL = require('image-url-validator').default;
 const checkAuthentication = require('../authMiddleware');
 
+router.get("/get/email/:email", checkAuthentication, async (req, res) => {
+    try {
+        const userEmail = req.params.email;
+
+        // Find products associated with the given email
+        const products = await Product.find({ email: userEmail });
+
+        if (!products || products.length === 0) {
+            return res.json({ success: false, message: "No products found for this email." });
+        }
+
+        res.json({ success: true, products });
+    } catch (err) {
+        console.error(err);
+        res.json({ success: false, message: "Unable to retrieve products." });
+    }
+});
+
+
 router.get("/get/:theme", (req, res) => { 
     Theme.findOne({name: req.params.theme })
     .then((theme) => {
