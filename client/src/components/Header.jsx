@@ -9,13 +9,16 @@ export default function Header() {
         useEffect(() => {
             const checkAuthentication = async () => {
                 try {
-                    const response = await fetch('http://localhost:3001/user/userinfo', {
+                    const response = await fetch(process.env.REACT_APP_SERVER_URL + '/user/userinfo', {
                         method: 'GET',
                         credentials: 'include', // Make sure credentials (cookies) are sent with the request
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
                     });
-    
+                    console.log(process.env.REACT_APP_SERVER_URL + '/user/userinfo');
                     const data = await response.json();
-    
+                    console.log(data);
                     if (data.success && data.authenticated) {
                         setIsLoggedIn(true);
                     } else {
@@ -42,10 +45,10 @@ export default function Header() {
                         {isLoggedIn ? (
                             <>
                                 <li><Link to="/profile">profile</Link></li>
-                                <li><Link onClick={() => window.location.href = 'http://localhost:3001/user/logout'}>logout</Link></li>
+                                <li><Link to={process.env.REACT_APP_SERVER_URL + '/user/logout'}>logout</Link></li>
                             </>
                         ) : (
-                            <li><Link onClick={() => window.location.href = 'http://localhost:3001/user/login'}>login</Link></li>
+                            <li><Link to={process.env.REACT_APP_SERVER_URL + '/user/login'}>login</Link></li>
                         )}
                     </ul>
                 </nav>

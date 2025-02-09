@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import "./AddProduct.css";
+import Header from "./Header";
 
 export default function AddProduct() {
   const [message, setMessage] = useState("");
@@ -11,7 +12,7 @@ export default function AddProduct() {
     category: "Clothing",
     size: "M",
     price: "",
-    theme: "Casual",
+    theme: "Duke Basketball",
     isSold: false,
     createdAt: new Date().toISOString().slice(0, 10),
   });
@@ -31,7 +32,7 @@ export default function AddProduct() {
         const uploadFormData = new FormData();
         uploadFormData.append("image", selectedFile);
 
-        const response = await axios.post("http://localhost:3001/upload", uploadFormData, {
+        const response = await axios.post(process.env.REACT_APP_SERVER_URL + "/upload", uploadFormData, {
           headers: { "Content-Type": "multipart/form-data" },
         });
 
@@ -48,21 +49,52 @@ export default function AddProduct() {
     setFormData((prev) => ({ ...prev, image: fileUrl }));
     console.log(JSON.stringify(formData))
     try {
-      const response = await fetch("http://localhost:3001/product/add", {
+      const response = await fetch(process.env.REACT_APP_SERVER_URL + "/product/add", {
         method: "POST",
         body: JSON.stringify(formData),
         headers: { "Content-Type": "application/json" },
         credentials: "include",
       });
-      const resData = await response.json();
-      console.log(resData);
+      const data = await response.json();
+      if (data.success) {
+        window.location.href = process.env.REACT_APP_CLIENT_URL + "/profile"
+      } else {
+        setMessage(data.message)
+      }
+      console.log(await response.json());
     } catch (error) {
       console.error("Request failed:", error);
     }
   };
 
+    // Determine sizes based on selected category
+  const getSizeOptions = () => {
+    if (formData.category === 'Shoes') {
+      // If category is Shoes, return sizes 3 to 14
+      return Array.from({ length: 12 }, (_, i) => i + 3).map((size) => (
+        <option key={size} value={size}>
+          {size}
+        </option>
+      ));
+    } else if (formData.category === 'Pants') {
+      // If category is Pants, return sizes 24 to 44
+      return Array.from({ length: 21 }, (_, i) => i + 24).map((size) => (
+        <option key={size} value={size}>
+          {size}
+        </option>
+      ));
+    } else {
+      // For other categories, return XS to XXL
+      return ['XS', 'S', 'M', 'L', 'XL', 'XXL'].map((size) => (
+        <option key={size} value={size}>
+          {size}
+        </option>
+      ));
+    }
+  };
   return (
     <div className="container">
+      <Header />
       <h2>Add Product</h2>
       {message && <p className="message">{message}</p>}
       <form onSubmit={handleSubmit}>
@@ -71,7 +103,7 @@ export default function AddProduct() {
 
         <label>Image:</label>
         <input type="file" name="image" accept="image/*" onChange={handleFileChange} required />
-        {fileUrl && <img src={"http://localhost:3001" + fileUrl} alt="Uploaded Preview" style={{ width: "100%", marginTop: "10px" }} />}
+        {fileUrl && <img src={fileUrl} alt="Uploaded Preview" style={{ width: "100%", marginTop: "10px" }} />}
 
         <label>Category:</label>
         <select name="category" value={formData.category} onChange={handleChange}>
@@ -84,9 +116,7 @@ export default function AddProduct() {
 
         <label>Size:</label>
         <select name="size" value={formData.size} onChange={handleChange}>
-          {(["XS", "S", "M", "L", "XL", "XXL"]).map((size) => (
-            <option key={size} value={size}>{size}</option>
-          ))}
+            {getSizeOptions()}
         </select>
 
         <label>Price ($):</label>
@@ -108,6 +138,7 @@ export default function AddProduct() {
           <option value="Cowboy">Cowboy</option>
           <option value="Christmas">Christmas</option>
           <option value="Valentines">Valentines</option>
+          <option value="Intramural Sports">Intramural Sports</option>
         </select>
 
         <button type="submit">Add Product</button>

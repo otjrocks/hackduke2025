@@ -11,7 +11,7 @@ export default function Browse() {
     useEffect(() => {
         const fetchThemes = async () => {
             try {
-                const response = await fetch("http://localhost:3001/theme/themes"); // Adjust URL as needed
+                const response = await fetch(process.env.REACT_APP_SERVER_URL + "/theme/themes"); // Adjust URL as needed
                 if (!response.ok) {
                     throw new Error("Failed to fetch themes");
                 }
@@ -33,7 +33,7 @@ export default function Browse() {
         <>
         <Header />
         <div className="browse-container">
-            <h1>Browse Party Themes</h1>
+            <h1>Browse Themes</h1>
             {error ? (
                 <p className="error">{error}</p>
             ) : (

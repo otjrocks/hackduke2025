@@ -10,7 +10,7 @@ export default function Home() {
     useEffect(() => {
         const checkAuthentication = async () => {
             try {
-                const response = await fetch('http://localhost:3001/user/userinfo', {
+                const response = await fetch(process.env.REACT_APP_SERVER_URL + '/user/userinfo', {
                     method: 'GET',
                     credentials: 'include', // Make sure credentials (cookies) are sent with the request
                 });
@@ -40,7 +40,7 @@ export default function Home() {
                 {isLoggedIn ? (
                     <Link to="/browse" className="browse-link">browse items</Link>
                 ) : (
-                    <Link to="http://localhost:3001/user/login" className="browse-link">login to begin</Link>
+                    <Link to={process.env.REACT_APP_SERVER_URL + "/user/login"} className="browse-link">login to begin</Link>
                 )}
             </div>
 

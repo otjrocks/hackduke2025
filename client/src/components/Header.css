@@ -3,7 +3,6 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 20px;
     background-color: #333;
     width: 100%;
     color: white;
@@ -12,6 +11,7 @@
 .app-name {
     font-size: 24px;
     font-weight: bold;
+    padding: 15px;
     padding-left: 30px;
     text-decoration: none !important;
     color: white;
@@ -42,6 +42,7 @@ a {
         width: auto;
         flex-direction: column;
         align-items: flex-start;
+        padding: 20px;
     }
     .app-name {
         padding: 0;

@@ -9,69 +9,89 @@ export default function Profile() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [message, setMessage] = useState("");
 
   useEffect(() => {
     const fetchUserData = async () => {
+      setLoading(true);
+      setError(null);
+      
       try {
-        const response = await axios.get('http://localhost:3001/user/userinfo', {
+        const response = await axios.get(process.env.REACT_APP_SERVER_URL + '/user/userinfo', {
           withCredentials: true,
         });
 
         if (response.data.success) {
           setUserInfo(response.data.user);
-          fetchUserProducts(response.data.user.email);
+          await fetchUserProducts(response.data.user.email);
         } else {
           setError(response.data.message || 'User not authenticated');
+          setLoading(false);
         }
       } catch (err) {
         console.error('Error fetching user data:', err);
         setError('Failed to fetch user info');
+        setLoading(false);
+      }
+    };
+
+    const fetchUserProducts = async (email) => {
+      try {
+        const response = await axios.get(process.env.REACT_APP_SERVER_URL + `/product/get/email/${email}`, {
+          withCredentials: true,
+        });
+
+        if (response.data.success) {
+          setProducts(response.data.products);
+        } else {
+          setError(response.data.message || 'No products found.');
+        }
+      } catch (err) {
+        console.error('Error fetching products:', err);
+        setError('Failed to fetch products.');
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchUserData();
-  }, []);
-
-  const fetchUserProducts = async (email) => {
-    try {
-      const response = await axios.get(`http://localhost:3001/product/get/email/${email}`, {
-        withCredentials: true,
-      });
-
-      if (response.data.success) {
-        setProducts(response.data.products);
-      } else {
-        setError(response.data.message || 'No products found.');
-      }
-    } catch (err) {
-      console.error('Error fetching products:', err);
-      setError('Failed to fetch products.');
-    } finally {
-      setLoading(false);
-    }
-  };
+  }, []); // Runs every time the page is loaded
 
   const handleLogout = () => {
-    window.location.href = 'http://localhost:3001/user/logout';
+    window.location.href = process.env.REACT_APP_SERVER_URL + '/user/logout';
   };
-  
+
+ // Function to handle the deletion of a product
+ const handleDelete = async (productId) => {
+  try {
+    const response = await axios.delete(process.env.REACT_APP_SERVER_URL + `/product/delete/${productId}`);
+    if (response.data.success) {
+      setMessage("Product deleted successfully!");
+      // Remove the deleted product from the list
+      setProducts((prevProducts) => prevProducts.filter((product) => product._id !== productId));
+    } else {
+      setMessage("Failed to delete product.");  }
+    } catch (error) {
+      setMessage("Error deleting product.");
+    }
+  };
+ 
 
   return (
     <>
-    {
-      userInfo ?
-      <>
-      <Header />
-      <div className="main-content">
-        <div className="profile-header">
-          <h1>Welcome, {userInfo.nickname}!</h1>
-          <p className="greeting">You're logged in as {userInfo.email}</p>
-        </div>
+      {userInfo ? 
+        <>
+          <Header />
+          <div className="main-content">
+            <div className="profile-header">
+              <h1>Welcome, {userInfo.nickname}!</h1>
+              <p className="greeting">You're logged in as {userInfo.email}</p>
+            </div>
 
-        <Link to="/addproduct">
-          <button className="logout-btn">Add New Product</button>
-        </Link>
-        <button className="logout-btn" onClick={handleLogout}>Logout</button>
+            <Link to="/addproduct">
+              <button className="logout-btn">Add New Product</button>
+            </Link>
+            <button className="logout-btn" onClick={handleLogout}>Logout</button>
 
         <h2>Your Products</h2>
         {loading ? (
@@ -82,14 +102,17 @@ export default function Profile() {
           <ul className="product-list">
             {products.map((product) => (
               <li key={product._id} className="product-item">
-                <img src={"http://localhost:3001" + product.image} alt={product.name} className="product-image" />
+                <img src={product.image} alt={product.name} className="product-image" />
                 <div>
                   <h3>{product.name}</h3>
                   <p>Size: {product.size}</p>
                   <p>Price: ${product.price}</p>
                   <p>Status: {product.isSold ? 'Sold' : 'Available'}</p>
+                  <button onClick={() => handleDelete(product._id)} className="delete-button">
+                  Delete
+                </button>
                 </div>
-              </li>
+                </li>
             ))}
           </ul>
         )}
@@ -99,7 +122,7 @@ export default function Profile() {
     <Header />
     <div className='main-content'>
     <h2>You are not logged in and cannot view the profile</h2>
-    <Link onClick={() => window.location.href = 'http://localhost:3001/user/login'}><button>login</button></Link>
+    <Link onClick={() => window.location.href = process.env.REACT_APP_SERVER_URL + '/user/login'}><button>login</button></Link>
     </div>
     </>
     }

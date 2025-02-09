@@ -6,11 +6,11 @@ const cookieParser = require('cookie-parser');
 router.use(cookieParser());
 
 // Auth0 Config
-const AUTH0_DOMAIN = 'dev-quoye04cjq6hwl2z.us.auth0.com';
-const AUTH0_CLIENT_ID = 'h0UevR77e35hOWwKT6A3Yz021ZLJXPGG';
-const AUTH0_CLIENT_SECRET = 'DEJfHEtoCgiPPrk1P0DnBc9XxPfRBrrTDxyIz2vLJWAsWa-9VVyN4k5m6vMwOqQL';
-const AUTH0_CALLBACK_URL = 'http://localhost:3001/user/callback'; // Update if deployed
-const AUTH0_LOGOUT_URL = 'http://localhost:3000'; // Update to your app's homepage
+const AUTH0_DOMAIN = process.env.AUTH0_DOMAIN;
+const AUTH0_CLIENT_ID = process.env.AUTH0_CLIENT_ID;
+const AUTH0_CLIENT_SECRET = process.env.AUTH0_CLIENT_SECRET;
+const AUTH0_CALLBACK_URL = process.env.SERVER_URL + '/user/callback';
+const AUTH0_LOGOUT_URL = process.env.CLIENT_URL;
 
 // 1. Redirect User to Auth0 Login Page
 router.get('/login', (req, res) => {
@@ -37,10 +37,10 @@ router.get('/callback', async (req, res) => {
     const { access_token, id_token } = response.data;
 
     // Store tokens in HTTP-only cookies
-    res.cookie('token', access_token, { httpOnly: true, secure: false, sameSite: 'Strict' });
-    res.cookie('id_token', id_token, { httpOnly: true, secure: false, sameSite: 'Strict' });
+    res.cookie('token', access_token, { httpOnly: true, secure: true, sameSite: 'None' });
+    res.cookie('id_token', id_token, { httpOnly: true, secure: true, sameSite: 'None' });
 
-    res.redirect('http://localhost:3000/profile'); 
+    res.redirect(process.env.CLIENT_URL + '/profile'); 
   } catch (error) {
     console.error('Error exchanging code for token:', error.response?.data || error.message);
     res.json({ success: false, message: 'Authentication failed' });
@@ -56,9 +56,18 @@ router.get('/logout', (req, res) => {
   res.redirect(logoutUrl);
 });
 
-// 4. Get User Info
+// 4. Get User Info (Cache User Info for Subsequent Requests)
 router.get('/userinfo', async (req, res) => {
   const token = req.cookies.token;
+  console.log(token);
+  console.log("Session: ", req.session);
+
+  // Check if user info is already cached in session
+  if (req.session.user) {
+    console.log(req.session.user);
+    return res.json({ success: true, authenticated: true, user: req.session.user });
+  }
+
   if (!token) {
     return res.json({ success: false, authenticated: false, message: 'Unauthorized' });
   }
@@ -67,8 +76,20 @@ router.get('/userinfo', async (req, res) => {
     const response = await axios.get(`https://${AUTH0_DOMAIN}/userinfo`, {
       headers: { Authorization: `Bearer ${token}` },
     });
+
+    req.session.user = response.data;
+    // Store user info in session for future requests
+    // req.session.save(err => {
+    //   if(err){
+    //       console.log(err);
+    //   } else {
+    //       res.send(req.session.user);
+    //   }
+    // });
+
     res.json({ success: true, authenticated: true, user: response.data });
   } catch (error) {
+    console.log(error);
     res.json({ success: false, authenticated: false, message: 'Invalid user token.' });
   }
 });
