@@ -63,7 +63,7 @@ const ProductsList = () => {
                                 <p>Price: ${product.price}</p>
                                 <p>Sold: {product.isSold ? "Yes" : "No"}</p>
                                 {product.image && (
-                                    <img src={process.env.REACT_APP_SERVER_URL + `${product.image}`} alt={product.name} />
+                                    <img src={product.image} alt={product.name} />
                                 )}
                             </div>
                         ))}

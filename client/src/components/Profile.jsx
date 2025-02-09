@@ -102,7 +102,7 @@ export default function Profile() {
           <ul className="product-list">
             {products.map((product) => (
               <li key={product._id} className="product-item">
-                <img src={process.env.REACT_APP_SERVER_URL + product.image} alt={product.name} className="product-image" />
+                <img src={product.image} alt={product.name} className="product-image" />
                 <div>
                   <h3>{product.name}</h3>
                   <p>Size: {product.size}</p>
