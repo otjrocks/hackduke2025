@@ -23,11 +23,10 @@ const app = express();
 
 const corsOptions = {
   origin: process.env.CLIENT_URL, // (https://your-client-app.com)
-  optionsSuccessStatus: 200,
   credentials: true
 };
 
-app.use(cors()); // TODO: CHANGE DANGEROUS 
+app.use(cors(corsOptions)); // TODO: CHANGE DANGEROUS 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
@@ -58,6 +57,12 @@ app.use(
     cookie: { secure: true, sameSite: "none" },
   })
 );
+const cors = require('cors');
+
+app.use(cors({
+  origin: 'https://hackduke2025.vercel.app', // Allow only your frontend
+  credentials: true, // Allow cookies/auth headers
+}));
 
 // Routes
 const user = require("./routes/user");
