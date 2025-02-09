@@ -12,6 +12,13 @@ export default function AboutBox() {
             <img 
                     src="/about-us.jpg" 
                     alt="Campus Closet Team"
+                    style={{
+                        width: "100%",
+                        maxWidth: "600px",
+                        display: "block",
+                        margin: "10px auto",
+                        borderRadius: "10px"
+                    }}
                     className="about-image"
             />
             <h3 className="about title">We are college students- Just like you.</h3>
