@@ -9,8 +9,8 @@ router.use(cookieParser());
 const AUTH0_DOMAIN = 'dev-quoye04cjq6hwl2z.us.auth0.com';
 const AUTH0_CLIENT_ID = 'h0UevR77e35hOWwKT6A3Yz021ZLJXPGG';
 const AUTH0_CLIENT_SECRET = 'DEJfHEtoCgiPPrk1P0DnBc9XxPfRBrrTDxyIz2vLJWAsWa-9VVyN4k5m6vMwOqQL';
-const AUTH0_CALLBACK_URL = 'http://localhost:3001/user/callback'; // Update if deployed
-const AUTH0_LOGOUT_URL = 'http://localhost:3000'; // Update to your app's homepage
+const AUTH0_CALLBACK_URL = 'http://localhost:3001/user/callback';
+const AUTH0_LOGOUT_URL = 'http://localhost:3000';
 
 // 1. Redirect User to Auth0 Login Page
 router.get('/login', (req, res) => {
@@ -56,17 +56,26 @@ router.get('/logout', (req, res) => {
   res.redirect(logoutUrl);
 });
 
-// 4. Get User Info
+// 4. Get User Info (Cache User Info for Subsequent Requests)
 router.get('/userinfo', async (req, res) => {
   const token = req.cookies.token;
   if (!token) {
     return res.json({ success: false, authenticated: false, message: 'Unauthorized' });
   }
 
+  // Check if user info is already cached in session
+  if (req.session.user) {
+    return res.json({ success: true, authenticated: true, user: req.session.user });
+  }
+
   try {
     const response = await axios.get(`https://${AUTH0_DOMAIN}/userinfo`, {
       headers: { Authorization: `Bearer ${token}` },
     });
+
+    // Store user info in session for future requests
+    req.session.user = response.data;
+
     res.json({ success: true, authenticated: true, user: response.data });
   } catch (error) {
     res.json({ success: false, authenticated: false, message: 'Invalid user token.' });

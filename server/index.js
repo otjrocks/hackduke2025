@@ -45,6 +45,16 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
+
+const session = require('express-session');
+
+app.use(session({
+  secret: 'your-secret-key', // Use a strong secret
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: false } // Set `secure: true` if you're using HTTPS
+}));
+
 // Routes
 const user = require("./routes/user");
 const product = require("./routes/product");
