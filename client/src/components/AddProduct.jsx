@@ -66,6 +66,31 @@ export default function AddProduct() {
     }
   };
 
+    // Determine sizes based on selected category
+  const getSizeOptions = () => {
+    if (formData.category === 'Shoes') {
+      // If category is Shoes, return sizes 3 to 14
+      return Array.from({ length: 12 }, (_, i) => i + 3).map((size) => (
+        <option key={size} value={size}>
+          {size}
+        </option>
+      ));
+    } else if (formData.category === 'Pants') {
+      // If category is Pants, return sizes 24 to 44
+      return Array.from({ length: 21 }, (_, i) => i + 24).map((size) => (
+        <option key={size} value={size}>
+          {size}
+        </option>
+      ));
+    } else {
+      // For other categories, return XS to XXL
+      return ['XS', 'S', 'M', 'L', 'XL', 'XXL'].map((size) => (
+        <option key={size} value={size}>
+          {size}
+        </option>
+      ));
+    }
+  };
   return (
     <div className="container">
       <h2>Add Product</h2>
@@ -89,9 +114,7 @@ export default function AddProduct() {
 
         <label>Size:</label>
         <select name="size" value={formData.size} onChange={handleChange}>
-          {(["XS", "S", "M", "L", "XL", "XXL"]).map((size) => (
-            <option key={size} value={size}>{size}</option>
-          ))}
+            {getSizeOptions()}
         </select>
 
         <label>Price ($):</label>
