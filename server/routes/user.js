@@ -81,6 +81,7 @@ router.get('/userinfo', async (req, res) => {
 
     res.json({ success: true, authenticated: true, user: response.data });
   } catch (error) {
+    console.log(error);
     res.json({ success: false, authenticated: false, message: 'Invalid user token.' });
   }
 });
