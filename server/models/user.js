@@ -1,13 +1,17 @@
-const express = require("express");
 const mongoose = require("mongoose");
 const passportLocalMongoose = require("passport-local-mongoose");
-const { auth } = require("express-oauth2-jwt-bearer");
 const validator = require("validator");
 
 // Define the User Schema
 const Schema = mongoose.Schema;
 
 const UserSchema = new Schema({
+  username: {
+    type: String,
+    unique: [true, "This username is already taken."],
+    match: [/^[a-zA-Z0-9]+$/, "Your username cannot contain special characters"], // This regex allows only alphanumeric characters
+    required: true,
+  },
   email: {
     type: String,
     required: [true, "A valid email is required."],
@@ -18,23 +22,17 @@ const UserSchema = new Schema({
       isAsync: false,
     },
   },
-  username: {
-    type: String,
-    unique: [true, "This username is already taken."],
-    match: [/^[a-zA-Z0-9]+$/, "Your username cannot contain special characters"], // This regex allows only alphanumeric characters
-    required: true,
-  },
   phone: {
     type: String,
-    required: true,
+    required: false,
   },
   bio: {
     type: String,
-    required: true,
-  },
-  items: {
-    type: Array,
     required: false,
+  },
+  campus: {
+    type: String,
+    required: true,
   },
   resetPasswordToken: { type: String },
   resetPasswordExpires: { type: Date },
@@ -42,9 +40,8 @@ const UserSchema = new Schema({
   // the plugin also handles hashing and creating of the field
 });
 
-// Plugin for passport-local-mongoose
-UserSchema.plugin(passportLocalMongoose, {
-  usernameField: "email", // This tells passport-local-mongoose to use 'email' instead of 'username'
-});
-
-const User = mongoose.model("User", UserSchema);
+// plugin for passport-local-mongoose 
+UserSchema.plugin(passportLocalMongoose); 
+  
+// export userschema 
+module.exports = mongoose.model("User", UserSchema); 

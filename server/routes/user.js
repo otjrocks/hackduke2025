@@ -2,15 +2,47 @@ const express = require('express');
 const router = express.Router();
 const axios = require('axios');
 const cookieParser = require('cookie-parser');
+const User = require('../models/user');
 
 router.use(cookieParser());
 
-// Auth0 Config
-const AUTH0_DOMAIN = process.env.AUTH0_DOMAIN;
-const AUTH0_CLIENT_ID = process.env.AUTH0_CLIENT_ID;
-const AUTH0_CLIENT_SECRET = process.env.AUTH0_CLIENT_SECRET;
-const AUTH0_CALLBACK_URL = process.env.SERVER_URL + '/user/callback';
-const AUTH0_LOGOUT_URL = process.env.CLIENT_URL;
+
+router.post("/register", function (req, res) { 
+  // Extract domain from email
+  const emailDomain = req.body.email.split("@")[1];
+  
+  // Allow only @duke.edu emails
+  if (emailDomain !== "duke.edu") {
+    return res.json({ success: false, message: "Currently, Campus Closet is only allows Duke University email addresses (@duke.edu)." });
+  }
+
+  User.register(new User({ email: req.body.email, username: req.body.username, campus: "Duke University" }), req.body.password, async function (err, user) {
+    if (err) { 
+        // Check if the email is already taken
+        const findEmail = await User.findOne({ email: req.body.email });
+        if (findEmail) {
+            res.json({ success: false, message: "This email is already associated with an account." });
+        } else {
+            // Check if the username is already taken
+            const findUsername = await User.findOne({ username: req.body.username });
+            if (findUsername) {
+                res.json({ success: false, message: "This username is already taken." });
+            } else {
+                res.json({ success: false, message: "Invalid password." });
+            }
+        }
+    } else { 
+        req.login(user, (er) => { 
+            if (er) { 
+                res.json({ success: false, message: "Invalid username or password, try again" });
+            } else { 
+                res.json({ success: true, message: "Your account has been saved" });
+            }
+        }); 
+    }
+}); 
+ 
+}); 
 
 // 1. Redirect User to Auth0 Login Page
 router.get('/login', (req, res) => {

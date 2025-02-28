@@ -1,4 +1,5 @@
 const express = require("express");
+const passport = require('passport');
 const dotenv = require("dotenv");
 const mongoose = require("mongoose");
 const cors = require("cors");
@@ -7,6 +8,7 @@ const multer = require("multer");
 const { put } = require("@vercel/blob");
 const session = require("express-session");
 const MongoDBStore = require("connect-mongodb-session")(session);
+const User = require('./models/user');
 
 dotenv.config();
 
@@ -34,28 +36,38 @@ app.use(cors(corsOptions)); // Apply CORS early
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+
+
 app.use("/uploads", express.static("uploads"));
 
-// Session Store (MongoDB)
+// Session Store (MongoDB-based)
 const store = new MongoDBStore({
   uri: process.env.MONGODB_API_URL,
   collection: "sessions",
 });
 
 store.on("error", function (error) {
-  console.log("Session Store Error:", error);
+  console.log("SESSION STORE ERROR:", error);
 });
 
-// **Session Middleware (MUST be before routes)**
+// Use express-session properly
 app.use(
   session({
-    secret: process.env.SESSION_SECRET || "your-secret",
+    secret: process.env.SESSION_SECRET,
     resave: false,
-    saveUninitialized: false,
-    cookie: { secure: true, sameSite: "none", maxAge: 7 * 24 * 60 * 60 * 1000 },
-    store: store,
+    saveUninitialized: true,
+    store: store, // Store sessions in MongoDB
   })
 );
+
+// Passport Middleware (AFTER session setup)
+app.use(passport.initialize());
+app.use(passport.session());
+
+passport.use(User.createStrategy());
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+
 
 // Multer Storage (for file uploads)
 const storage = multer.memoryStorage();
