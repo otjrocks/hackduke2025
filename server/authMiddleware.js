@@ -1,25 +1,44 @@
-const axios = require('axios');
-const AUTH0_DOMAIN = 'dev-quoye04cjq6hwl2z.us.auth0.com'; // Your Auth0 domain
+const jwt = require('jsonwebtoken');
+const User = require('./models/user');  // Adjust the path as necessary
 
+// Middleware to check if the user is authenticated and return user info
 const checkAuthentication = (req, res, next) => {
-  const token = req.cookies.token;
-  if (!token) {
-    return res.json({ success: false, authenticated: false, message: 'Unauthorized' });
-  }
+    const token = req.cookies.token; // Assuming token is stored in cookies
 
-  // Make a request to Auth0's userinfo endpoint to get user data
-  axios.get(`https://${AUTH0_DOMAIN}/userinfo`, {
-    headers: { Authorization: `Bearer ${token}` },
-  })
-    .then(response => {
-      // Token is valid, extract user data (email, name, etc.)
-      const { email, name } = response.data;
-      req.user = { email, name }; // Attach user data to the request object
-      next(); // Proceed to the next middleware or route handler
-    })
-    .catch(error => {
-      return res.json({ success: false, authenticated: false, message: 'Invalid user token.' });
-    });
+    if (!token) {
+        return res.json({ success: false, authenticated: false, message: "Unauthorized" });
+    }
+
+    try {
+        // Verify the token and decode it
+        const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
+        
+        // Find the user by decoded userId
+        User.findOne({ _id: decoded.userId })
+            .then((user) => {
+                if (!user) {
+                    return res.json({ success: false, authenticated: false, message: "User not found." });
+                }
+
+                // Attach user data to req.user so it can be accessed by other middleware or routes
+                req.user = {
+                    email: user.email,
+                    username: user.username,
+                    id: user._id,
+                    name: user.username // Customize as per your requirements
+                };
+
+                // Proceed to the next middleware or route handler
+                next();
+            })
+            .catch((err) => {
+                console.log(err);
+                return res.json({ success: false, authenticated: false, message: "Invalid user token." });
+            });
+    } catch (err) {
+        console.log(err);
+        return res.json({ success: false, authenticated: false, message: "Failed to verify token." });
+    }
 };
 
 module.exports = checkAuthentication;

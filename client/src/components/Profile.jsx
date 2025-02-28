@@ -122,7 +122,7 @@ export default function Profile() {
     <Header />
     <div className='main-content'>
     <h2>You are not logged in and cannot view the profile</h2>
-    <Link onClick={() => window.location.href = process.env.REACT_APP_SERVER_URL + '/user/login'}><button>login</button></Link>
+    <Link onClick={() => window.location.href = process.env.REACT_APP_CLIENT_URL + "/login"}><button>login</button></Link>
     </div>
     </>
     }

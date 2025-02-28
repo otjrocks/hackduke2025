@@ -1,8 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const axios = require('axios');
 const cookieParser = require('cookie-parser');
 const User = require('../models/user');
+var jwt = require('jsonwebtoken');
+const passport = require('passport');
 
 router.use(cookieParser());
 
@@ -44,86 +45,65 @@ router.post("/register", function (req, res) {
  
 }); 
 
-// 1. Redirect User to Auth0 Login Page
-router.get('/login', (req, res) => {
-  const authUrl = `https://${AUTH0_DOMAIN}/authorize?response_type=code&client_id=${AUTH0_CLIENT_ID}&redirect_uri=${AUTH0_CALLBACK_URL}&scope=openid profile email`;
-  res.redirect(authUrl);
-});
 
-// 2. Handle Auth0 Callback (Exchange Auth Code for Access Token)
-router.get('/callback', async (req, res) => {
-  const { code } = req.query;
-  if (!code) {
-    return res.json({ success: false, message: 'Authorization code missing' });
+router.post("/login", function (req, res) { 
+  if (!req.body.email) { 
+      res.json({ success: false, message: "Email was not given" }) 
+  } 
+  else if (!req.body.password) { 
+      res.json({ success: false, message: "Password was not given" }) 
   }
+  else { 
+      passport.authenticate("local", function (err, user, info) { 
+          if (err) { 
+              res.json({ success: false, message: "Error with authentication" }); 
+          } 
+          else { 
+              if (!user) { 
+                  res.json({ success: false, message: "Incorrect username or password." }); 
+              } 
+              else { 
+                  const token = jwt.sign({ userId: user._id, username: user.username }, process.env.JWT_SECRET_KEY, { expiresIn: "24h" }); 
+                  // Configure the `token` HTTPOnly cookie
+                  let options = {
+                      maxAge: 1000 * 60 * 60 * 24, // expire after 24 hours
+                      httpOnly: true, // Cookie will not be exposed to client side code
+                      sameSite: "Strict", // If client and server origins are different
+                      secure: false // use with HTTPS only
+                  }
+                  res.cookie( "token", token, options );
+                  res.json({ success: true, message: "Authentication successful" }); 
+              } 
+          } 
+      })(req, res); 
+  } 
+}); 
 
-  try {
-    const response = await axios.post(`https://${AUTH0_DOMAIN}/oauth/token`, {
-      grant_type: 'authorization_code',
-      client_id: AUTH0_CLIENT_ID,
-      client_secret: AUTH0_CLIENT_SECRET,
-      code,
-      redirect_uri: AUTH0_CALLBACK_URL,
-    });
+router.get("/logout", function (req, res) {  
+  res.cookie('token', '', {maxAge: 0})
+  res.json({ success: true, message: 'Logout successful' })
+})
 
-    const { access_token, id_token } = response.data;
-
-    // Store tokens in HTTP-only cookies
-    res.cookie('token', access_token, { httpOnly: true, secure: true, sameSite: 'None' });
-    res.cookie('id_token', id_token, { httpOnly: true, secure: true, sameSite: 'None' });
-
-    res.redirect(process.env.CLIENT_URL + '/profile'); 
-  } catch (error) {
-    console.error('Error exchanging code for token:', error.response?.data || error.message);
-    res.json({ success: false, message: 'Authentication failed' });
-  }
-});
-
-// 3. Logout (Clear Cookies & Redirect to Auth0 Logout)
-router.get('/logout', (req, res) => {
-  res.clearCookie('token');
-  res.clearCookie('id_token');
-
-  const logoutUrl = `https://${AUTH0_DOMAIN}/v2/logout?client_id=${AUTH0_CLIENT_ID}&returnTo=${AUTH0_LOGOUT_URL}`;
-  res.redirect(logoutUrl);
-});
-
-// 4. Get User Info (Cache User Info for Subsequent Requests)
-router.get('/userinfo', async (req, res) => {
-  const token = req.cookies.token;
-  console.log("Token: " + token);
-  console.log("Session: " + req.session);
-  console.log("User: " + req.session.user);
-
-  // Check if user info is already cached in session
-  if (req.session.user) {
-    return res.json({ success: true, authenticated: true, user: req.session.user });
-  }
-
+router.get("/userinfo", function (req, res) {
+  const token = req?.cookies?.token
   if (!token) {
-    return res.json({ success: false, authenticated: false, message: 'Unauthorized' });
-  }
-
-  try {
-    const response = await axios.get(`https://${AUTH0_DOMAIN}/userinfo`, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-
-    // req.session.user = response.data;
-    // Store user info in session for future requests
-    // req.session.save(err => {
-    //   if (err) {
-    //     // console.log(err);
-    //   } else {
-    //     console.log("SAVE COMPLETE");
-    //   }
-    // });
-
-    res.json({ success: true, authenticated: true, user: response.data });
-  } catch (error) {
-    // console.log(error);
-    res.json({ success: false, authenticated: false, message: 'Invalid user token.' });
+      res.json({ success: false, authenticated: false, message: "Unauthorized"})
+  } else {
+      decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
+      User.findOne({_id: decoded.userId })
+          .then((user) => {
+              res.json({success: true, authenticated: true, email: user.email, username: user.username, id: user._id, user: {
+                email: user.email, 
+                nickname: user.username,
+                name: user.username,
+              }})
+          })
+          .catch((err) => {
+              res.json({success: false, authenticated: false, message: "Invalid user token."})
+              console.log(err);
+          });
   }
 });
+
 
 module.exports = router;

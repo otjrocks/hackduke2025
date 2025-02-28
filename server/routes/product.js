@@ -4,9 +4,10 @@ const User = require('../models/user');
 const Product = require('../models/product');
 const Theme = require('../models/theme');
 const isImageURL = require('image-url-validator').default;
+const passport = require('passport');
 const checkAuthentication = require('../authMiddleware');
 
-router.get("/get/email/:email", checkAuthentication, async (req, res) => {
+router.get("/get/email/:email", async (req, res) => {
     try {
         const userEmail = req.params.email;
 
@@ -53,52 +54,50 @@ router.delete("/delete/:_id", async(req, res)=>{
     } catch (error) {
         res.status(500).json({ success: false, message: "Error deleting product" });
     }
-})
-
-router.post("/add", checkAuthentication, (req, res) => {
-    async function updateProduct(req, res) {  
-        try {
-
-            // Lookup theme by name (using Theme schema)
-            let theme = await Theme.findOne({ name: req.body.theme });
-            
-            // If theme doesn't exist, create it
-            if (!theme) {
-                theme = new Theme({
-                    name: req.body.theme
-                });
-
-                // Save the new theme to the database
-                await theme.save();
-            }
-
-            // Create or update product
-            const product = await Product.findOneAndUpdate(
-                { email: req.user.email, name: req.body.name, size: req.body.size }, 
-                {
-                    $set: {
-                        email: req.user.email, 
-                        name: req.body.name, 
-                        theme: theme._id,  // Use theme._id instead of req.body.theme
-                        size: req.body.size, 
-                        image: req.body.image, 
-                        price: req.body.price, 
-                        isSold: req.body.isSold, 
-                        createdAt: req.body.createdAt 
-                    }
-                },
-                { new: true, upsert: true } // upsert will create a new product if it does not exist
-            );
-            console.log("Success! added product");
-            res.json({ success: true, authenticated: true, product: product });
-        } catch (err) {
-            console.log(err);
-            res.json({ success: false, authenticated: false, message: "Unable to add product. Please try again." });
-        }
-    }
-
-    updateProduct(req, res);
 });
+
+
+router.post("/add", checkAuthentication, async (req, res) => {
+    try {
+        // Lookup theme by name (using Theme schema)
+        let theme = await Theme.findOne({ name: req.body.theme });
+        
+        // If theme doesn't exist, create it
+        if (!theme) {
+            theme = new Theme({
+                name: req.body.theme
+            });
+
+            // Save the new theme to the database
+            await theme.save();
+        }
+
+        // Create or update product
+        const product = await Product.findOneAndUpdate(
+            { email: req.user.email, name: req.body.name, size: req.body.size }, 
+            {
+                $set: {
+                    email: req.user.email, 
+                    name: req.body.name, 
+                    theme: theme._id,  // Use theme._id instead of req.body.theme
+                    size: req.body.size, 
+                    image: req.body.image, 
+                    price: req.body.price, 
+                    isSold: req.body.isSold, 
+                    createdAt: req.body.createdAt 
+                }
+            },
+            { new: true, upsert: true } // upsert will create a new product if it does not exist
+        );
+        
+        console.log("Success! added product");
+        res.json({ success: true, authenticated: true, product: product });
+    } catch (err) {
+        console.log(err);
+        res.json({ success: false, authenticated: false, message: "Unable to add product. Please try again." });
+    }
+});
+
 
 
 module.exports = router;

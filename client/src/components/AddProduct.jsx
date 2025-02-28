@@ -61,7 +61,6 @@ export default function AddProduct() {
       } else {
         setMessage(data.message)
       }
-      console.log(await response.json());
     } catch (error) {
       console.error("Request failed:", error);
     }

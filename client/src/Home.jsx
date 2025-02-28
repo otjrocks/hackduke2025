@@ -40,7 +40,7 @@ export default function Home() {
                 {isLoggedIn ? (
                     <Link to="/browse" className="browse-link">browse items</Link>
                 ) : (
-                    <Link to={process.env.REACT_APP_SERVER_URL + "/user/login"} className="browse-link">login to begin</Link>
+                    <Link to={process.env.REACT_APP_CLIENT_URL + "/login"} className="browse-link">login to begin</Link>
                 )}
             </div>
 

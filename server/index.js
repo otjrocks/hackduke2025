@@ -9,6 +9,8 @@ const { put } = require("@vercel/blob");
 const session = require("express-session");
 const MongoDBStore = require("connect-mongodb-session")(session);
 const User = require('./models/user');
+const LocalStrategy = require('passport-local').Strategy;
+
 
 dotenv.config();
 
@@ -64,7 +66,11 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
-passport.use(User.createStrategy());
+passport.use(new LocalStrategy({
+  usernameField: 'email'
+}, User.authenticate()));
+
+
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 

@@ -48,7 +48,7 @@ export default function Header() {
                                 <li><Link to={process.env.REACT_APP_SERVER_URL + '/user/logout'}>logout</Link></li>
                             </>
                         ) : (
-                            <li><Link to={process.env.REACT_APP_SERVER_URL + '/user/login'}>login</Link></li>
+                            <li><Link to={process.env.REACT_APP_CLIENT_URL + '/login'}>login</Link></li>
                         )}
                     </ul>
                 </nav>

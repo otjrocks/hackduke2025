@@ -13,6 +13,8 @@ import {
 } from "react-router-dom";
 import './index.css';
 import About from './components/About';
+import Login from './components/Login';
+import Register from './components/Register';
 
 const router = createBrowserRouter([
   { path: "/", element: <Home /> },
@@ -31,6 +33,14 @@ const router = createBrowserRouter([
   {
     path: "/products/:theme", // :theme is the dynamic parameter
     element: <ProductsList />
+  }, 
+  {
+    path: "/login",
+    element: <Login />
+  }, 
+  {
+    path: "/register",
+    element: <Register />
   }
 ]);
 
