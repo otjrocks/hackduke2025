@@ -1,16 +1,22 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { Link, useNavigate } from 'react-router-dom';
+import Header from './Header';
 
 const Register = () => {
   const [email, setEmail] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const response = await axios.post(process.env.REACT_APP_SERVER_URL + '/user/register', { email, username, password });
+      if (response.data.success) {
+        navigate('/profile');
+      }
       setMessage(response.data.message);
     } catch (error) {
       setMessage('Error occurred while registering');
@@ -19,6 +25,7 @@ const Register = () => {
 
   return (
     <div>
+      <Header />
       <h2>Register</h2>
       <form onSubmit={handleSubmit}>
         <div>
@@ -49,8 +56,9 @@ const Register = () => {
           />
         </div>
         <button type="submit">Register</button>
+        <Link to={"/login"}>Already have an account?</Link>
+        {message && <p>{message}</p>}
       </form>
-      {message && <p>{message}</p>}
     </div>
   );
 };

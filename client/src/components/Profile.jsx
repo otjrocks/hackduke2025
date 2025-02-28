@@ -31,7 +31,6 @@ export default function Profile() {
       } catch (err) {
         console.error('Error fetching user data:', err);
         setError('Failed to fetch user info');
-        setLoading(false);
       }
     };
 
@@ -79,52 +78,54 @@ export default function Profile() {
 
   return (
     <>
-      {userInfo ? 
-        <>
-          <Header />
-          <div className="main-content">
-            <div className="profile-header">
-              <h1>Welcome, {userInfo.nickname}!</h1>
-              <p className="greeting">You're logged in as {userInfo.email}</p>
-            </div>
+    {loading ? <></> :
+    userInfo ? 
+      <>
+        <Header />
+        <div className="main-content">
+          <div className="profile-header">
+            <h1>Welcome, {userInfo.nickname}!</h1>
+            <p className="greeting">You're logged in as {userInfo.email}</p>
+          </div>
 
-            <Link to="/addproduct">
-              <button className="logout-btn">Add New Product</button>
-            </Link>
-            <button className="logout-btn" onClick={handleLogout}>Logout</button>
+          <Link to="/addproduct">
+            <button className="logout-btn">Add New Product</button>
+          </Link>
+          <button className="logout-btn" onClick={handleLogout}>Logout</button>
 
-        <h2>Your Products</h2>
-        {loading ? (
-          <p>Loading products...</p>
-        ) : products.length === 0 ? (
-          <p>No products found.</p>
-        ) : (
-          <ul className="product-list">
-            {products.map((product) => (
-              <li key={product._id} className="product-item">
-                <img src={product.image} alt={product.name} className="product-image" />
-                <div>
-                  <h3>{product.name}</h3>
-                  <p>Size: {product.size}</p>
-                  <p>Price: ${product.price}</p>
-                  <p>Status: {product.isSold ? 'Sold' : 'Available'}</p>
-                  <button onClick={() => handleDelete(product._id)} className="delete-button">
-                  Delete
-                </button>
-                </div>
-                </li>
-            ))}
-          </ul>
-        )}
-      </div>
-    </> :
-    <>
-    <Header />
-    <div className='main-content'>
-    <h2>You are not logged in and cannot view the profile</h2>
-    <Link onClick={() => window.location.href = process.env.REACT_APP_CLIENT_URL + "/login"}><button>login</button></Link>
+      <h2>Your Products</h2>
+      {loading ? (
+        <p>Loading products...</p>
+      ) : products.length === 0 ? (
+        <p>No products found.</p>
+      ) : (
+        <ul className="product-list">
+          {products.map((product) => (
+            <li key={product._id} className="product-item">
+              <img src={product.image} alt={product.name} className="product-image" />
+              <div>
+                <h3>{product.name}</h3>
+                <p>Size: {product.size}</p>
+                <p>Price: ${product.price}</p>
+                <p>Status: {product.isSold ? 'Sold' : 'Available'}</p>
+                <button onClick={() => handleDelete(product._id)} className="delete-button">
+                Delete
+              </button>
+              </div>
+              </li>
+          ))}
+        </ul>
+      )}
     </div>
-    </>
+  </> :
+  <>
+  <Header />
+  <div className='main-content'>
+  <h2>You are not logged in and cannot view the profile</h2>
+  <Link onClick={() => window.location.href = process.env.REACT_APP_CLIENT_URL + "/login"}><button>login</button></Link>
+  </div>
+  </>
+  
     }
     </>
   );

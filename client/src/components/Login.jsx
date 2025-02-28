@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import { Link, useNavigate } from 'react-router-dom'; // Import useNavigate
+import Header from './Header';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -26,6 +27,7 @@ const Login = () => {
 
   return (
     <div>
+      <Header />
       <h2>Login</h2>
       <form onSubmit={handleSubmit}>
         <div>
@@ -47,8 +49,9 @@ const Login = () => {
           />
         </div>
         <button type="submit">Login</button>
+        <Link to={"/register"}>Create an account</Link>
+        {message && <p>{message}</p>}
       </form>
-      {message && <p>{message}</p>}
     </div>
   );
 };

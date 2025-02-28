@@ -14,7 +14,7 @@ router.post("/register", function (req, res) {
   
   // Allow only @duke.edu emails
   if (emailDomain !== "duke.edu") {
-    return res.json({ success: false, message: "Currently, Campus Closet is only allows Duke University email addresses (@duke.edu)." });
+    return res.json({ success: false, message: "Currently, only duke users are allowed (email ending in @duke.edu)" });
   }
 
   User.register(new User({ email: req.body.email, username: req.body.username, campus: "Duke University" }), req.body.password, async function (err, user) {
@@ -81,7 +81,7 @@ router.post("/login", function (req, res) {
 
 router.get("/logout", function (req, res) {  
   res.cookie('token', '', {maxAge: 0})
-  res.json({ success: true, message: 'Logout successful' })
+  res.redirect(process.env.CLIENT_URL + "/")
 })
 
 router.get("/userinfo", function (req, res) {

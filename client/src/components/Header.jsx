@@ -5,9 +5,11 @@ import { useState, useEffect } from 'react';
 
 export default function Header() {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
     
         useEffect(() => {
             const checkAuthentication = async () => {
+                setIsLoading(true);
                 try {
                     const response = await fetch(process.env.REACT_APP_SERVER_URL + '/user/userinfo', {
                         method: 'GET',
@@ -24,9 +26,11 @@ export default function Header() {
                     } else {
                         setIsLoggedIn(false);
                     }
+                    setIsLoading(false);
                 } catch (error) {
                     console.error("Error fetching user info:", error);
                     setIsLoggedIn(false);
+                    setIsLoading(false);
                 }
             };
     
@@ -42,7 +46,7 @@ export default function Header() {
                         <li><Link to="/about">about</Link></li>
                         <li><Link to="/browse">browse</Link></li>
                         
-                        {isLoggedIn ? (
+                        {isLoading ? <></> : isLoggedIn ? (
                             <>
                                 <li><Link to="/profile">profile</Link></li>
                                 <li><Link to={process.env.REACT_APP_SERVER_URL + '/user/logout'}>logout</Link></li>

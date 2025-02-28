@@ -71,11 +71,12 @@ label {
 }
 
 input, select {
-    width: 100%;
+    width: calc(100% - 20px);
     padding: 10px;
     font-size: 1rem;
     border: 1px solid #ddd;
     border-radius: 5px;
+    margin-top: 7px;
 }
 
 button {
