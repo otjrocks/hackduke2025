@@ -5,7 +5,9 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const multer = require("multer");
-const { put } = require("@vercel/blob");
+// const { put } = require("@vercel/blob");
+const { S3Client, PutObjectCommand } = require("@aws-sdk/client-s3");
+require("dotenv").config(); // Ensure you have your AWS credentials in .env
 const session = require("express-session");
 const MongoDBStore = require("connect-mongodb-session")(session);
 const User = require('./models/user');
@@ -20,8 +22,8 @@ const mongoDB = process.env.MONGODB_API_URL;
 // MongoDB setup
 mongoose.set("strictQuery", false);
 async function main() {
-  await mongoose.connect(mongoDB);
-  console.log("MongoDB connected");
+  await mongoose.connect(mongoDB);
+  console.log("MongoDB connected");
 }
 main().catch(err => console.log("MongoDB connection error:", err));
 
@@ -29,8 +31,8 @@ const app = express();
 
 // CORS Configuration
 const corsOptions = {
-  origin: process.env.CLIENT_URL, // Allow only your frontend
-  credentials: true, // Allow cookies/auth headers
+  origin: process.env.CLIENT_URL, // Allow only your frontend
+  credentials: true, // Allow cookies/auth headers
 };
 app.use(cors(corsOptions)); // Apply CORS early
 
@@ -44,22 +46,22 @@ app.use("/uploads", express.static("uploads"));
 
 // Session Store (MongoDB-based)
 const store = new MongoDBStore({
-  uri: process.env.MONGODB_API_URL,
-  collection: "sessions",
+  uri: process.env.MONGODB_API_URL,
+  collection: "sessions",
 });
 
 store.on("error", function (error) {
-  console.log("SESSION STORE ERROR:", error);
+  console.log("SESSION STORE ERROR:", error);
 });
 
 // Use express-session properly
 app.use(
-  session({
-    secret: process.env.SESSION_SECRET,
-    resave: false,
-    saveUninitialized: true,
-    store: store, // Store sessions in MongoDB
-  })
+  session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: true,
+    store: store, // Store sessions in MongoDB
+  })
 );
 
 // Passport Middleware (AFTER session setup)
@@ -67,7 +69,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 passport.use(new LocalStrategy({
-  usernameField: 'email'
+  usernameField: 'email'
 }, User.authenticate()));
 
 
@@ -88,30 +90,49 @@ app.use("/user", user);
 app.use("/product", product);
 app.use("/theme", theme);
 
+// AWS S3 Configuration
+const s3 = new S3Client({
+  region: "us-east-2", // Set your AWS region
+  credentials: {
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+  },
+});
+
+const BUCKET_NAME = process.env.AWS_S3_BUCKET_NAME;
+
 // Upload Route (File Uploads)
 app.post("/upload", upload.single("image"), async (req, res) => {
-  try {
-    if (!req.file) {
-      return res.status(400).json({ success: false, message: "No file uploaded" });
-    }
+  try {
+    if (!req.file) {
+      return res.status(400).json({ success: false, message: "No file uploaded" });
+    }
 
-    const fileBuffer = req.file.buffer;
-    const fileName = `${Date.now()}-${req.file.originalname}`;
+    const fileBuffer = req.file.buffer;
+    const fileName = `${Date.now()}-${req.file.originalname}`;
 
-    // Upload file to Vercel Blob
-    const blob = await put(fileName, fileBuffer, {
-      access: "public", // Makes the file publicly accessible
-    });
+    // Upload file to AWS
+    const uploadParams = {
+      Bucket: BUCKET_NAME,
+      Key: fileName,
+      Body: fileBuffer,
+      ContentType: req.file.mimetype,
+      // ACL: "public-read", // Makes the file publicly accessible
+    };
 
-    console.log("File Uploaded:", blob.url);
-    res.json({ success: true, fileUrl: blob.url });
-  } catch (error) {
-    console.error("Upload error:", error);
-    res.status(500).json({ success: false, message: "Upload failed" });
-  }
+    await s3.send(new PutObjectCommand(uploadParams));
+
+    const fileUrl = `https://${BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${fileName}`;
+    
+    console.log("File Uploaded:", fileUrl);
+    res.json({ success: true, fileUrl });
+  } catch (error) {
+    console.error("Upload error:", error);
+    res.status(500).json({ success: false, message: "Upload failed" });
+  }
 });
 
 // Start Server
 app.listen(PORT, () => {
-  console.log(`Server listening on ${PORT}`);
+  console.log(`Server listening on ${PORT}`);
 });
