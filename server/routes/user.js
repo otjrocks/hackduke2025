@@ -69,7 +69,7 @@ router.post("/login", function (req, res) {
                       maxAge: 1000 * 60 * 60 * 24, // expire after 24 hours
                       httpOnly: true, // Cookie will not be exposed to client side code
                       sameSite: "Strict", // If client and server origins are different
-                      secure: false // use with HTTPS only
+                      secure: process.env.SECURE // use with HTTPS only
                   }
                   res.cookie( "token", token, options );
                   res.json({ success: true, message: "Authentication successful" }); 
