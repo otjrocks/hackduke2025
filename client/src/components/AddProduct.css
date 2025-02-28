@@ -111,3 +111,30 @@ button:hover {
         padding: 15px;
     }
 }
+
+/* Spinner Container - Ensures it appears while uploading */
+.spinner-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+}
+
+/* Spinner - Visible during upload */
+.spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid rgba(0, 0, 0, 0.2);
+    border-top-color: #ff5733; /* Use theme color */
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    display: block; /* Ensure visibility */
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+  
