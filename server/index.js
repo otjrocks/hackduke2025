@@ -6,7 +6,7 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const multer = require("multer");
 // const { put } = require("@vercel/blob");
-const { S3Client, CreateMultipartUploadCommand, UploadPartCommand, CompleteMultipartUploadCommand } = require("@aws-sdk/client-s3");
+const { S3Client, PutObjectCommand } = require("@aws-sdk/client-s3");
 require("dotenv").config(); // Ensure you have your AWS credentials in .env
 const session = require("express-session");
 const MongoDBStore = require("connect-mongodb-session")(session);
@@ -97,6 +97,8 @@ const s3 = new S3Client({
 });
 
 const BUCKET_NAME = process.env.AWS_S3_BUCKET_NAME;
+
+const { S3Client, PutObjectCommand, CreateMultipartUploadCommand, UploadPartCommand, CompleteMultipartUploadCommand } = require("@aws-sdk/client-s3");
 
 app.post("/upload", upload.single("image"), async (req, res) => {
   try {
