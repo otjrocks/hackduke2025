@@ -131,6 +131,13 @@ button:hover {
     display: block; /* Ensure visibility */
 }
 
+.error-message {
+    color: red;
+    font-size: 14px;
+    margin-top: 10px;
+    text-align: center;
+  }
+  
 @keyframes spin {
     to {
         transform: rotate(360deg);
