@@ -7,6 +7,7 @@ export default function AddProduct() {
   const [message, setMessage] = useState("");
   const [fileUrl, setFileUrl] = useState("");
   const [loading, setLoading] = useState(false); //Added loading state
+  const [errorMessage, setErrorMessage] = useState("");
   const [formData, setFormData] = useState({
     name: "",
     image: null,
@@ -29,8 +30,13 @@ export default function AddProduct() {
   const handleFileChange = async (e) => {
     const selectedFile = e.target.files[0];
     if (selectedFile) {
+      setFileUrl(null);
+      if (selectedFile.size > 5 * 1024 * 1024) {
+        setErrorMessage("File size exceeds 5MB. Please upload a smaller image.");
+        return;
+      }
       setLoading(true);
-      setFileUrl(null);  // Hide the old image while uploading
+      setErrorMessage(""); 
       try {
         const uploadFormData = new FormData();
         uploadFormData.append("image", selectedFile);
@@ -43,6 +49,7 @@ export default function AddProduct() {
         setFormData((prev) => ({ ...prev, image: response.data.fileUrl }));
       } catch (error) {
         console.error("Error uploading image:", error);
+        setErrorMessage("Upload failed. Please try again.");
       } finally {
         setLoading(false); // Hide spinner when upload completes
       }
@@ -106,14 +113,18 @@ export default function AddProduct() {
         <input type="text" name="name" value={formData.name} onChange={handleChange} required />
 
         <label>Image:</label>
-        <input type="file" name="image" accept="image/*" onChange={handleFileChange} required />
-        {fileUrl && <img src={fileUrl} alt="Uploaded Preview" style={{ width: "100%", marginTop: "10px" }} />}
+        <input type="file" name="image" accept="image/png, image/jpeg, image/jpg, image/gif" onChange={handleFileChange} required />
 
-        {/* ✅ Show Spinner While Uploading */}
+        {errorMessage && <p className="error-message">{errorMessage}</p>}
+
          {loading && (
           <div className="spinner-container">
             <div className="spinner"></div>
           </div>
+        )}
+
+          {!errorMessage && !loading && fileUrl && (
+            <img src={fileUrl} alt="Uploaded Preview" style={{ width: "100%", marginTop: "10px" }} />
         )}
 
         <label>Category:</label>
