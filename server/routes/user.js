@@ -4,9 +4,21 @@ const cookieParser = require('cookie-parser');
 const User = require('../models/user');
 var jwt = require('jsonwebtoken');
 const passport = require('passport');
+const crypto = require('crypto');
+const nodemailer = require('nodemailer');
 
 router.use(cookieParser());
 
+
+const transporter = nodemailer.createTransport({
+    host: process.env.EMAIL_HOST,
+    port: process.env.EMAIL_PORT,
+    secure: true,
+    auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS
+    }
+});
 
 router.post("/register", function (req, res) { 
   // Extract domain from email
@@ -103,6 +115,66 @@ router.get("/userinfo", function (req, res) {
               console.log(err);
           });
   }
+});
+
+
+router.post('/forgot', async (req, res) => {
+    const { email } = req.body;
+    try {
+        const user = await User.findOne({ email });
+        if (!user) {
+            return res.json({success: false, message: 'No user with that email'});
+        }
+
+        // Generate a reset token
+        const token = crypto.randomBytes(20).toString('hex');
+        user.resetPasswordToken = token;
+        user.resetPasswordExpires = Date.now() + 7200000; // 2 hours
+
+        await user.save();
+
+        const mailOptions = {
+            to: user.email,
+            from: process.env.EMAIL_USER,
+            subject: process.env.WEBSITE_NAME + ' Password Reset',
+            text: `You are receiving this because you (or someone else) have requested the reset of the password for your ${process.env.WEBSITE_NAME} account.\n\n` +
+                `Please click on the following link, or paste this into your browser to complete the process:\n\n` +
+                `${process.env.CLIENT_URL}/reset/${token}\n\n` +
+                `If you did not request this, please ignore this email and your password will remain unchanged.\n`
+        };
+
+        await transporter.sendMail(mailOptions);
+        res.json({success: true, message: 'An e-mail has been sent to ' + user.email + ' with further instructions.'});
+    } catch (err) {
+        console.log(err);
+        res.json({success: false, message: 'Server Error, try again later.'});
+    }
+});
+
+
+// post to reset password after email has been sent with token
+router.post('/reset/:token', async (req, res) => {
+    try {
+        const user = await User.findOne({
+            resetPasswordToken: req.params.token,
+            resetPasswordExpires: { $gt: Date.now() }
+        });
+        if (!user) {
+            return res.json({success: false, message: 'Password reset token is invalid or has expired.'});
+        }
+        if (req.body.password === req.body.confirm) {
+            await user.setPassword(req.body.password);
+            user.resetPasswordToken = undefined;
+            user.resetPasswordExpires = undefined;
+
+            await user.save();
+            res.json({success: true, message: 'Password has been reset successfully.'});
+        } else {
+            res.json({success: false, message: 'Passwords do not match.'});
+        }
+    } catch (err) {
+        res.json({sucess: false, message: 'Server error, try again later.'});
+    }
 });
 
 

@@ -50,6 +50,7 @@ const Login = () => {
         </div>
         <button type="submit">Login</button>
         <Link to={"/register"}>Create an account</Link>
+        <Link to={"/forgot"}>Forgot Password</Link>
         {message && <p>{message}</p>}
       </form>
     </div>
