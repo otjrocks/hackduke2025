@@ -43,14 +43,21 @@ router.get("/get/:theme", (req, res) => {
     })
 });
 
-router.delete("/delete/:_id", async(req, res)=>{
+router.delete("/delete/:_id", checkAuthentication, async(req, res)=>{
     try {
         const { _id } = req.params;
-        const deletedProduct = await Product.findByIdAndDelete(_id);
-        if (!deletedProduct) {
-            return res.status(404).json({ success: false, message: "Product not found" });
-          }
-          res.json({ success: true, message: "Product deleted successfully" });
+        const product = await Product.findById(_id); // Await the database query
+
+        if (!product) {
+            return res.json({ success: false, message: "Product not found" });
+        }
+
+        if (product.email !== req.user.email) {
+            return res.json({ success: false, message: "Unauthorized" });
+        }
+        // Proceed with deletion if authorized
+        await Product.findByIdAndDelete(_id);
+        res.json({ success: true, message: "Product deleted successfully" });
     } catch (error) {
         res.status(500).json({ success: false, message: "Error deleting product" });
     }
@@ -90,10 +97,8 @@ router.post("/add", checkAuthentication, async (req, res) => {
             { new: true, upsert: true } // upsert will create a new product if it does not exist
         );
         
-        console.log("Success! added product");
         res.json({ success: true, authenticated: true, product: product });
     } catch (err) {
-        console.log(err);
         res.json({ success: false, authenticated: false, message: "Unable to add product. Please try again." });
     }
 });

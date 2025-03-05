@@ -6,7 +6,7 @@ const checkAuthentication = (req, res, next) => {
     const token = req.cookies.token; // Assuming token is stored in cookies
 
     if (!token) {
-        return res.json({ success: false, authenticated: false, message: "Unauthorized" });
+        return res.json({ success: false, authenticated: false, message: "You are not logged in!" });
     }
 
     try {

@@ -63,13 +63,16 @@ export default function Profile() {
  // Function to handle the deletion of a product
  const handleDelete = async (productId) => {
   try {
-    const response = await axios.delete(process.env.REACT_APP_SERVER_URL + `/product/delete/${productId}`);
+    const response = await axios.delete(process.env.REACT_APP_SERVER_URL + `/product/delete/${productId}`, {
+      withCredentials: true,
+    });
     if (response.data.success) {
-      setMessage("Product deleted successfully!");
+      setMessage(response.data.success);
       // Remove the deleted product from the list
       setProducts((prevProducts) => prevProducts.filter((product) => product._id !== productId));
     } else {
-      setMessage("Failed to delete product.");  }
+      console.log(response.data);
+      setMessage(response.data.message);  }
     } catch (error) {
       setMessage("Error deleting product.");
     }
@@ -100,6 +103,7 @@ export default function Profile() {
         <p>No products found.</p>
       ) : (
         <ul className="product-list">
+          {message && <p>{message}</p> }
           {products.map((product) => (
             <li key={product._id} className="product-item">
               <img src={product.image} alt={product.name} className="product-image" />
@@ -109,7 +113,7 @@ export default function Profile() {
                 <p>Price: ${product.price}</p>
                 <p>Status: {product.isSold ? 'Sold' : 'Available'}</p>
                 <button onClick={() => handleDelete(product._id)} className="delete-button">
-                Delete
+                Remove listing
               </button>
               </div>
               </li>
