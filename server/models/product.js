@@ -30,10 +30,6 @@ const ProductSchema = new Schema({
         type: Date,
         required: true,
     },
-    isSold: {
-        type: Boolean,
-        required: true,
-    }
 }); 
 
 module.exports = mongoose.model("Product", ProductSchema); 

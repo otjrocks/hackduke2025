@@ -87,7 +87,6 @@ router.post("/add", checkAuthentication, async (req, res) => {
                     size: req.body.size, 
                     image: req.body.image, 
                     price: req.body.price, 
-                    isSold: req.body.isSold, 
                     createdAt: req.body.createdAt 
                 }
             },

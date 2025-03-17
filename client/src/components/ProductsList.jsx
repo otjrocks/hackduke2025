@@ -85,8 +85,7 @@ const ProductsList = () => {
                                 <h2>{product.name}</h2>
                                 <p>Size: {product.size}</p>
                                 <p>Price: ${product.price}</p>
-                                <p>Sold: {product.isSold ? "Yes" : "No"}</p>
-                                <p>Email: {product.email}</p>
+                                <p>Email: <a href={`mailto:${product.email}`}>{product.email}</a></p>
                                 {product.image && (
                                     <img src={product.image} alt={product.name} />
                                 )}

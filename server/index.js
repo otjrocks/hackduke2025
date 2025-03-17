@@ -5,7 +5,6 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const multer = require("multer");
-// const { put } = require("@vercel/blob");
 const { S3Client, PutObjectCommand, CreateMultipartUploadCommand, UploadPartCommand, CompleteMultipartUploadCommand } = require("@aws-sdk/client-s3");
 require("dotenv").config(); // Ensure you have your AWS credentials in .env
 const session = require("express-session");
