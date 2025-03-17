@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import Header from "./Header";
 
 const ProductsList = () => {
@@ -12,8 +12,13 @@ const ProductsList = () => {
         const fetchProducts = async () => {
             try {
                 // Fetch products by theme using fetch API
-                const response = await fetch(process.env.REACT_APP_SERVER_URL + `/product/get/${theme}`);
-
+                const response = await fetch(process.env.REACT_APP_SERVER_URL + `/product/get/${theme}`, {
+                    method: 'GET',
+                    credentials: 'include', // Make sure credentials (cookies) are sent with the request
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                });
                 // Check if the response is successful
                 if (response.ok) {
                     const data = await response.json();
@@ -27,7 +32,6 @@ const ProductsList = () => {
                 }
             } catch (err) {
                 setError("An error occurred while fetching the products.");
-                console.error(err);
             } finally {
                 setLoading(false);
             }
@@ -37,15 +41,35 @@ const ProductsList = () => {
     }, [theme]);
 
     if (loading) {
-        return <div>Loading...</div>;
+        return <>
+        <Header />
+
+        <div className="main-content">
+            <h1>
+            Loading ...
+            </h1>
+            </div>
+        
+        </>
     }
 
     if (error) {
-        return <div>{error}</div>;
+        return <>
+        <Header />
+
+        <div className="main-content">
+            <h1>
+            {error}
+            </h1>
+            <Link to={process.env.REACT_APP_CLIENT_URL + "/login"} className="browse-link">login</Link>
+            </div>
+        
+        </>;
     }
 
     return (
         <>
+        
         <Header />
         <div className="main-content">
             {products.length < 1 ? (

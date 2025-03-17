@@ -1,10 +1,7 @@
 const express = require('express');
 const router = express.Router();  
-const User = require('../models/user'); 
 const Product = require('../models/product');
 const Theme = require('../models/theme');
-const isImageURL = require('image-url-validator').default;
-const passport = require('passport');
 const checkAuthentication = require('../authMiddleware');
 
 router.get("/get/email/:email", async (req, res) => {
@@ -25,7 +22,7 @@ router.get("/get/email/:email", async (req, res) => {
 });
 
 
-router.get("/get/:theme", (req, res) => { 
+router.get("/get/:theme", checkAuthentication, (req, res) => { 
     Theme.findOne({name: req.params.theme })
     .then((theme) => {
         Product.find({theme: theme})

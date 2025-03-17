@@ -18,9 +18,7 @@ export default function Header() {
                             "Content-Type": "application/json",
                         },
                     });
-                    console.log(process.env.REACT_APP_SERVER_URL + '/user/userinfo');
                     const data = await response.json();
-                    console.log(data);
                     if (data.success && data.authenticated) {
                         setIsLoggedIn(true);
                     } else {
