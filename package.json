@@ -34,7 +34,9 @@
     "passport": "^0.7.0",
     "passport-local": "^1.0.0",
     "passport-local-mongoose": "^8.0.0",
-    "validator": "^13.12.0"
+    "validator": "^13.12.0",
+    "xtend": "^4.0.2",
+    "yocto-queue": "^1.2.0"
   },
   "devDependencies": {
     "react-router-dom": "^7.1.5"
