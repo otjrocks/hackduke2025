@@ -15,13 +15,14 @@ router.get("/get", checkAuthentication, async (req, res) => {
         const totalPages = Math.ceil(totalProducts / perPage);
 
         if (page > totalPages) { // no products for this page
-            res.json({
+            return res.json({
                 success: true,
                 currentPage: page,
                 totalPages,
                 perPage,
                 totalProducts
             });
+            return
         }
 
         // Fetch paginated products sorted by date posted and unique ID

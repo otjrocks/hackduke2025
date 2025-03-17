@@ -88,6 +88,14 @@ export default function Profile() {
 
   return (
     <>
+    { error && 
+    <>
+    <Header />
+    <div className="main-content">
+      <h1>{error}</h1>
+    </div>
+    </>
+    }
       {loading ? <></> :
       userInfo ? 
       <>
