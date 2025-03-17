@@ -5,7 +5,6 @@ import Product from './components/Product';
 import Browse from './components/Browse';
 import AddProduct from "./components/AddProduct"
 import Profile from "./components/Profile"
-import ProductsList from './components/ProductsList';
 
 import {
   createBrowserRouter,
@@ -17,6 +16,7 @@ import Login from './components/Login';
 import Register from './components/Register';
 import ForgotPassword from './components/ForgotPassword';
 import ResetPassword from './components/ResetPassword';
+import ProductsListPage from './components/ProductsListPage';
 
 const router = createBrowserRouter([
   { path: "/", element: <Home /> },
@@ -34,7 +34,7 @@ const router = createBrowserRouter([
   // Updated route with dynamic theme parameter
   {
     path: "/products/:theme", // :theme is the dynamic parameter
-    element: <ProductsList />
+    element: <ProductsListPage />
   }, 
   {
     path: "/login",

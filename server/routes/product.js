@@ -4,6 +4,45 @@ const Product = require('../models/product');
 const Theme = require('../models/theme');
 const checkAuthentication = require('../authMiddleware');
 
+// Get the products based on date and page
+router.get("/get/:page", async (req, res) => {
+    try {
+        const perPage = 10; // Number of products per page
+        const page = parseInt(req.params.page) || 1; // Current page
+
+        // Count total documents
+        const totalProducts = await Product.countDocuments();
+        const totalPages = Math.ceil(totalProducts / perPage);
+
+        if (page > totalPages) { // no products for this page
+            res.json({success: true,
+                currentPage: page,
+                totalPages,
+                perPage,
+                totalProducts });
+        }
+
+        // Fetch paginated products sorted by date posted and unique ID
+        const products = await Product.find()
+            .sort({ createdAt: 1, _id: 1 }) // Sort by createdAt and then _id
+            .skip((page - 1) * perPage)
+            .limit(perPage);
+
+        res.json({
+            success: true,
+            products,
+            currentPage: page,
+            totalPages,
+            perPage,
+            totalProducts
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ success: false, message: "Unable to retrieve products." });
+    }
+});
+
+
 router.get("/get/email/:email", async (req, res) => {
     try {
         const userEmail = req.params.email;
