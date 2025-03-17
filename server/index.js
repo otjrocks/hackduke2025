@@ -4,7 +4,6 @@ const dotenv = require("dotenv");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
-const multer = require("multer");
 const { S3Client, PutObjectCommand, CreateMultipartUploadCommand, UploadPartCommand, CompleteMultipartUploadCommand } = require("@aws-sdk/client-s3");
 require("dotenv").config(); // Ensure you have your AWS credentials in .env
 const session = require("express-session");
@@ -73,9 +72,6 @@ passport.use(new LocalStrategy({
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
-// Multer Storage (for file uploads)
-const storage = multer.memoryStorage();
-const upload = multer({ storage: storage });
 
 // Routes
 const user = require("./routes/user");
@@ -97,7 +93,7 @@ const s3 = new S3Client({
 
 const BUCKET_NAME = process.env.AWS_S3_BUCKET_NAME;
 
-app.post("/upload", upload.single("image"), async (req, res) => {
+app.post("/upload", async (req, res) => {
   try {
     if (!req.file) {
       return res.status(400).json({ success: false, message: "No file uploaded" });
