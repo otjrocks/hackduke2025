@@ -5,7 +5,7 @@ const Theme = require('../models/theme');
 const checkAuthentication = require('../authMiddleware');
 
 // Get the products based on date and page
-router.get("/get/:page", async (req, res) => {
+router.get("/get/:page", checkAuthentication, async (req, res) => {
     try {
         const perPage = 10; // Number of products per page
         const page = parseInt(req.params.page) || 1; // Current page
@@ -43,7 +43,7 @@ router.get("/get/:page", async (req, res) => {
 });
 
 
-router.get("/get/email/:email", async (req, res) => {
+router.get("/get/email/:email", checkAuthentication, async (req, res) => {
     try {
         const userEmail = req.params.email;
 

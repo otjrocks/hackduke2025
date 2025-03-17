@@ -12,7 +12,13 @@ const ProductsListPage = () => {
     useEffect(() => {
         const fetchProducts = async () => {
             try {
-                const response = await fetch(process.env.REACT_APP_SERVER_URL + `/product/get/${theme}`);
+                const response = await fetch(process.env.REACT_APP_SERVER_URL + `/product/get/${theme}`, {
+                    method: 'GET',
+                    credentials: 'include', // Make sure credentials (cookies) are sent with the request
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                });
                 if (response.ok) {
                     const data = await response.json();
                     if (data.success) {

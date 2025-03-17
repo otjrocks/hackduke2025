@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./Browse.css";
 import Header from "./Header";
 import ProductsList from "./ProductsList";
@@ -31,26 +31,36 @@ export default function Browse() {
         const fetchProducts = async () => {
             setLoading(true);
             try {
-                const response = await fetch(`${process.env.REACT_APP_SERVER_URL}/product/get/${currentPage}`);
+                const response = await fetch(`${process.env.REACT_APP_SERVER_URL}/product/get/${currentPage}`, {
+                    method: 'GET',
+                    credentials: 'include', // Make sure credentials (cookies) are sent with the request
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                });
                 if (!response.ok) throw new Error("Failed to fetch products");
                 const data = await response.json();
-        
-                if (data.products.length === 0) {
-                    setHasMore(false); // No more products to load
+                if (!data.success) {
+                    setError(data.message);
                 } else {
-                    // If it's the first page, just set the products
-                    if (currentPage === 1) {
-                        setProducts(data.products);
+                    setError("");
+                    if (data.products.length === 0) {
+                        setHasMore(false); // No more products to load
                     } else {
-                        // For subsequent pages, append products, but filter out duplicates
-                        setProducts((prev) => {
-                            const newProducts = data.products.filter(product =>
-                                !prev.some(existingProduct => existingProduct._id === product._id)
-                            );
-                            return [...prev, ...newProducts];
-                        });
+                        // If it's the first page, just set the products
+                        if (currentPage === 1) {
+                            setProducts(data.products);
+                        } else {
+                            // For subsequent pages, append products, but filter out duplicates
+                            setProducts((prev) => {
+                                const newProducts = data.products.filter(product =>
+                                    !prev.some(existingProduct => existingProduct._id === product._id)
+                                );
+                                return [...prev, ...newProducts];
+                            });
+                        }
+                        setHasMore(currentPage < data.totalPages); // Check if we have more pages
                     }
-                    setHasMore(currentPage < data.totalPages); // Check if we have more pages
                 }
             } catch (err) {
                 setError(err.message);
@@ -74,11 +84,17 @@ export default function Browse() {
     return (
         <>
             <Header />
-            <div className="browse-container">
+            {error ? (
+                <div className="browse-container">
+                    <h1 className="error">{error}</h1> 
+                    <br></br>
+                    <Link to={process.env.REACT_APP_CLIENT_URL + "/login"} className="browse-link">login to begin</Link>
+                </div>
+            )
+                :
+                (
+                <div className="browse-container">
                 <h1>Browse Themes</h1>
-                {error ? (
-                    <p className="error">{error}</p>
-                ) : (
                     <div className="theme-list">
                         {themes.map((theme) => (
                             <div
@@ -90,7 +106,6 @@ export default function Browse() {
                             </div>
                         ))}
                     </div>
-                )}
 
                 <h1>All Listings</h1>
                 <ProductsList products={products} />
@@ -111,6 +126,8 @@ export default function Browse() {
                     </button>
                 )}
             </div>
+                )
+            }
         </>
     );
 }
