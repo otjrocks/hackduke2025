@@ -16,7 +16,7 @@ export default function AddProduct() {
     price: "",
     theme: "Duke Basketball",
     isSold: false,
-    createdAt: new Date().toISOString().slice(0, 10),
+    createdAt: new Date().toISOString(),
   });
 
   const handleChange = (e) => {

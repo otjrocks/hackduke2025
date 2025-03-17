@@ -17,7 +17,7 @@ const Login = () => {
         { withCredentials: true } // This includes cookies with the request
       );
       if (response.data.success) { // Ensure success is in the correct place
-        navigate('/profile'); // Redirect to the desired route
+        navigate('/browse'); // Redirect to the desired route
       }
       setMessage(response.data.message);
     } catch (error) {

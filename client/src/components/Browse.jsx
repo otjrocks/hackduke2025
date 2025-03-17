@@ -31,7 +31,7 @@ export default function Browse() {
         const fetchProducts = async () => {
             setLoading(true);
             try {
-                const response = await fetch(`${process.env.REACT_APP_SERVER_URL}/product/get/${currentPage}`, {
+                const response = await fetch(`${process.env.REACT_APP_SERVER_URL}/product/get/?page=${currentPage}`, {
                     method: 'GET',
                     credentials: 'include', // Make sure credentials (cookies) are sent with the request
                     headers: {
@@ -40,6 +40,7 @@ export default function Browse() {
                 });
                 if (!response.ok) throw new Error("Failed to fetch products");
                 const data = await response.json();
+                console.log(data)
                 if (!data.success) {
                     setError(data.message);
                 } else {
