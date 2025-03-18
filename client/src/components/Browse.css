@@ -7,40 +7,36 @@
 
 /* Grid Layout */
 .theme-list {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 20px;
-    padding: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
     justify-content: center;
-    align-items: center;
+    margin-bottom: 30px;
 }
 
 /* Theme Card */
 .theme-card {
     background-color: white;
     border-radius: 12px;
-    padding: 15px;
     text-align: center;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15);
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.15);
     transition: transform 0.3s ease-in-out, background-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
-    width: 180px; /* Ensure consistent sizing */
-    height: 100px;
-    display: flex;
+    padding-left: 10px;
+    padding-right: 10px;
     align-items: center;
-    justify-content: center;
+    align-self: center;
 }
 
 /* Text Styling */
 .theme-card h3 {
     color: rgb(248, 100, 1); /* Light Orange Text */
-    font-size: 1.2rem;
+    font-size: 1rem;
     font-weight: bold;
     transition: color 0.3s ease-in-out; /* Smooth text color transition */
 }
 
 /* Hover Effect */
 .theme-card:hover {
-    transform: scale(1.08);
     cursor: pointer;
     background-color: #ff7043;
     box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.2);
@@ -51,21 +47,13 @@
     color: white !important;
 }
 
-/* Responsive for smaller screens */
-@media (max-width: 768px) {
-    .theme-list {
-        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-    }
-
-    .theme-card {
-        width: 140px;
-        height: 80px;
-        font-size: 0.9rem;
-    }
-}
-
 .product-item p {
     margin: 2px 0; /* Reduce vertical spacing */
     font-size: 0.9rem; /* Optional: Adjust font size if needed */
     line-height: 1.2; /* Reduce line height */
+}
+
+.after-products {
+    margin-top: 30px;
+    margin-bottom: 30px;
 }

@@ -95,7 +95,8 @@ export default function Browse() {
                 :
                 (
                 <div className="browse-container">
-                <h1>Browse Themes</h1>
+                <h1>Browse The Campus Closet</h1>
+                <h2>Browse By Theme</h2>
                     <div className="theme-list">
                         {themes.map((theme) => (
                             <div
@@ -107,18 +108,12 @@ export default function Browse() {
                             </div>
                         ))}
                     </div>
-
-                <h1>All Listings</h1>
                 <ProductsList products={products} />
-
+                <div className="after-products">
                 {loading && (
-                    <div className="loading-spinner">
-                        Loading...
-                    </div>
-                )}
-
-                {!hasMore && products.length > 0 && (
-                    <p className="end-of-list">No more products to load.</p>
+                    <div className="spinner-container">
+                    <div className="spinner"></div>
+                  </div>
                 )}
 
                 {hasMore && !loading && (
@@ -126,6 +121,7 @@ export default function Browse() {
                         Load More
                     </button>
                 )}
+                </div>
             </div>
                 )
             }

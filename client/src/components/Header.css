@@ -1,17 +1,18 @@
 /* Default styles for larger screens */
 .header {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
+    justify-content: space-between; /* This will place title on the left and menu on the right */
+    align-items: center; /* Centers items vertically */
     background-color: #333;
-    width: 100%;
+    width: 100vw;
     color: white;
+    padding-top: 15px;
+    padding-bottom: 15px;
 }
 
 .app-name {
     font-size: 24px;
     font-weight: bold;
-    padding: 15px;
     padding-left: 30px;
     text-decoration: none !important;
     color: white;
@@ -24,6 +25,7 @@ a {
 .navigation ul {
     display: flex;
     list-style-type: none;
+    margin: 0;
     padding-right: 30px;
 }
 
@@ -36,13 +38,17 @@ a {
     text-decoration: none;
 }
 
+/* Hide the hamburger on desktop */
+.hamburger {
+    display: none;
+}
+
 /* Mobile styles */
 @media (max-width: 768px) {
     .header {
-        width: auto;
         flex-direction: column;
         align-items: flex-start;
-        padding: 20px;
+        margin: auto;
     }
     .app-name {
         padding: 0;
@@ -57,6 +63,11 @@ a {
         display: block;
         margin-top: 10px;
         padding: 0;
+        display: none; /* Hide the menu by default on mobile */
+    }
+
+    .navigation.open ul {
+        display: block; /* Show the menu when it's open */
     }
 
     .navigation li {
@@ -64,5 +75,18 @@ a {
         margin-top: 10px;
         width: 100%;
         text-align: center;
+    }
+
+    /* Hamburger icon */
+    .hamburger {
+        font-size: 30px;
+        cursor: pointer;
+        display: block;
+        color: white;
+        text-align: center;
+        margin-top: 3px;
+        margin-bottom: 3px;
+        margin-left: auto;
+        margin-right: auto;
     }
 }

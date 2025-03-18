@@ -63,7 +63,7 @@ const ProductsListPage = () => {
         }
     };
 
-    if (loading && currentPage === 1) return <><Header /><div className="main-content"><h1>Loading...</h1></div></>;
+    if (loading && currentPage === 1) return <><Header /><div className="main-content"><div className="spinner-container"><div className="spinner"></div></div></div></>;
     if (error) return <><Header /><div className="main-content"><h1>{error}</h1></div></>;
 
     return (
@@ -72,12 +72,11 @@ const ProductsListPage = () => {
             <div className="main-content">
                 <h1>Products for {theme}</h1>
                 <ProductsList products={products} theme={theme} />
+                <div className="after-products">
                 {loading && currentPage > 1 && (
-                    <div className="loading-spinner">Loading...</div>
-                )}
-
-                {!hasMore && products.length > 0 && (
-                    <p className="end-of-list">No more products to load.</p>
+                  <div className="spinner-container">
+                    <div className="spinner"></div>
+                  </div>
                 )}
 
                 {hasMore && !loading && (
@@ -85,6 +84,7 @@ const ProductsListPage = () => {
                         Load More
                     </button>
                 )}
+                </div>
             </div>
         </>
     );

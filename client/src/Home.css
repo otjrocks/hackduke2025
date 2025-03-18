@@ -7,14 +7,12 @@
 
 /* Apply Super Boys font to all headers */
 h1, h2 {
-    font-family: 'Super Boys', sans-serif !important;
+    font-family: 'Super Boys', sans-serif;
     font-size: 3.7rem;
     color: #ff5733;
 }
 
-/* Ensure consistent body styling */
 body {
-    font-family: 'Super Boys', sans-serif !important;
     background-color: #fdf0d5;
     margin: 0;
     padding: 0;
@@ -66,6 +64,7 @@ body {
     border-radius: 10px;
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
     margin-top: 150px;
+    margin-bottom: 150px;
 }
 
 .about-section h2 {

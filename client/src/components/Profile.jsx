@@ -136,7 +136,7 @@ export default function Profile() {
           )}
 
           {/* Pagination Controls */}
-          <div className="pagination-controls">
+          <div className="after-products pagination-controls">
             {currentPage > 1 && (
               <button onClick={() => handlePageChange(currentPage - 1)} className="pagination-button">
                 Previous
