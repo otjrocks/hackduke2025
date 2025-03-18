@@ -20,42 +20,80 @@ const transporter = nodemailer.createTransport({
     }
 });
 
-router.post("/register", function (req, res) { 
-  // Extract domain from email
-  const emailDomain = req.body.email.split("@")[1];
-  
-  // Allow only @duke.edu emails
-  if (emailDomain !== "duke.edu") {
-    return res.json({ success: false, message: "Currently, only duke users are allowed (email ending in @duke.edu)" });
-  }
 
-  User.register(new User({ email: req.body.email, username: req.body.username, campus: "Duke University" }), req.body.password, async function (err, user) {
-    if (err) { 
-        // Check if the email is already taken
-        const findEmail = await User.findOne({ email: req.body.email });
-        if (findEmail) {
-            res.json({ success: false, message: "This email is already associated with an account." });
-        } else {
-            // Check if the username is already taken
-            const findUsername = await User.findOne({ username: req.body.username });
-            if (findUsername) {
-                res.json({ success: false, message: "This username is already taken." });
-            } else {
-                res.json({ success: false, message: "Invalid password." });
-            }
-        }
-    } else { 
-        req.login(user, (er) => { 
-            if (er) { 
-                res.json({ success: false, message: "Invalid username or password, try again" });
-            } else { 
-                res.json({ success: true, message: "Your account has been saved" });
-            }
-        }); 
+// Function to validate password strength
+function isStrongPassword(password) {
+  const minLength = 8;
+  const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+  return password.length >= minLength && regex.test(password);
+}
+
+router.post("/register", async function (req, res) {
+  try {
+    const { email, username, password } = req.body;
+
+    // Extract domain from email
+    const emailDomain = email.split("@")[1];
+
+    // Allow only @duke.edu emails
+    if (emailDomain !== "duke.edu") {
+      return res.json({ success: false, message: "Currently, only Duke users are allowed (email ending in @duke.edu)." });
     }
-}); 
- 
-}); 
+
+    // Validate password strength
+    if (!isStrongPassword(password)) {
+      return res.json({ success: false, message: "Password must be at least 8 characters long, include an uppercase letter, a lowercase letter, a number, and a special character." });
+    }
+
+    // Check if email is already taken
+    const existingEmail = await User.findOne({ email });
+    if (existingEmail) {
+      return res.json({ success: false, message: "This email is already associated with an account." });
+    }
+
+    // Check if username is already taken
+    const existingUsername = await User.findOne({ username });
+    if (existingUsername) {
+      return res.json({ success: false, message: "This username is already taken." });
+    }
+
+    // Register user
+    User.register(new User({ email, username, campus: "Duke University" }), password, (err, user) => {
+      if (err) {
+        return res.json({ success: false, message: "Error registering user." });
+      }
+
+      // Login in user
+      passport.authenticate("local", function (err, u, info) { 
+        if (err) { 
+            res.json({ success: false, message: "Error with authentication" }); 
+        } 
+        else { 
+            if (!user) { 
+                res.json({ success: false, message: "Incorrect username or password." }); 
+            } 
+            else { 
+                const token = jwt.sign({ userId: user._id, username: username }, process.env.JWT_SECRET_KEY, { expiresIn: "24h" }); 
+                // Configure the `token` HTTPOnly cookie
+                let options = {
+                    maxAge: 1000 * 60 * 60 * 24, // expire after 24 hours
+                    httpOnly: true, // Cookie will not be exposed to client side code
+                    sameSite: "Strict", // If client and server origins are different
+                    secure: process.env.SECURE // use with HTTPS only
+                }
+                res.cookie( "token", token, options );
+                res.json({ success: true, message: "Authentication successful" }); 
+            } 
+        } 
+    })(req, res); 
+    });
+  } catch (error) {
+    return res.json({ success: false, message: "An error occurred. Please try again." });
+  }
+});
+
+module.exports = router;
+
 
 
 router.post("/login", function (req, res) { 

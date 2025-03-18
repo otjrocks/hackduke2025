@@ -13,9 +13,11 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(process.env.REACT_APP_SERVER_URL + '/user/register', { email, username, password });
+      const response = await axios.post(process.env.REACT_APP_SERVER_URL + '/user/register', { email, username, password },
+        { withCredentials: true } // This includes cookies with the request
+      );
       if (response.data.success) {
-        navigate('/profile');
+        navigate('/browse');
       }
       setMessage(response.data.message);
     } catch (error) {

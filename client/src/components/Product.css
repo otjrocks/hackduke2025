@@ -1,0 +1,9 @@
+.single-product {
+    width: 40%;
+    margin-top: 50px;
+}
+@media (max-width: 768px) {
+    .single-product {
+        width: 90%;
+    }
+}

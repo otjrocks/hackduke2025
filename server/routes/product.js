@@ -46,6 +46,23 @@ router.get("/get", checkAuthentication, async (req, res) => {
 });
 
 
+// get single product
+router.get("/get/product/:id", checkAuthentication, async (req, res) => {
+    try {
+        const { id } = req.params;
+        const product = await Product.findById(id);
+
+        if (!product) {
+            return res.status(404).json({ success: false, message: "Product not found." });
+        }
+
+        res.json({ success: true, product });
+    } catch (err) {
+        res.status(500).json({ success: false, message: "Error retrieving product." });
+    }
+});
+
+
 router.get("/get/email/:email", checkAuthentication, async (req, res) => {
     try {
         const userEmail = req.params.email;

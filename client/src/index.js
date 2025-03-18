@@ -31,11 +31,14 @@ const router = createBrowserRouter([
     path: "/addproduct",
     element: <AddProduct />
   },
-  // Updated route with dynamic theme parameter
   {
     path: "/products/:theme", // :theme is the dynamic parameter
     element: <ProductsListPage />
   }, 
+  {
+    path: "/product/:id",  // single product
+    element: <Product />
+  },
   {
     path: "/login",
     element: <Login />
