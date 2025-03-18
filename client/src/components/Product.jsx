@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Header from "./Header";
 import "./Product.css";
-import MetaData from "./MetaData";
+
 
 export default function Product() {
   const { id } = useParams();
@@ -40,7 +40,6 @@ export default function Product() {
 
   return (
     <>
-      {product && <MetaData image={product.image} />}
       <Header />
       <div className="main-content">
         <div key={product._id} className="single-product">
