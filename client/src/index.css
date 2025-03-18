@@ -42,11 +42,6 @@ img {
   width: 100%;
 }
 
-.product-item {
-  max-width: 400px !important;
-}
-
-
 /* Spinner Container - Ensures it appears while uploading */
 .spinner-container {
   display: flex;
@@ -70,4 +65,12 @@ img {
   to {
       transform: rotate(360deg);
   }
+}
+
+.product-image {
+  width: 100%;
+  object-fit: cover;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  margin-bottom: 10px;          
 }
