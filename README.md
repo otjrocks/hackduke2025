@@ -1,2 +1,2 @@
-# hackduke2025
-Hack Duke Project 2025
+# Campus Closet
+A web application built original for Hack Duke Project 2025

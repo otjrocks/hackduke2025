@@ -112,8 +112,8 @@ export default function Browse() {
                 <div className="after-products">
                 {loading && (
                     <div className="spinner-container">
-                    <div className="spinner"></div>
-                  </div>
+                        <div className="spinner"></div>
+                    </div>
                 )}
 
                 {hasMore && !loading && (
