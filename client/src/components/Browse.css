@@ -2,30 +2,40 @@
 .browse-container {
     text-align: center;
     padding: 20px;
-    background-color: rgb(33, 67, 203);
+    background-color: rgb(33, 67, 203)
 }
 
-/* Grid Layout */
+.browse-container h2 {
+    color: white;
+    font-weight: normal;
+}
+
+.browse-container h2:last-of-type {
+    margin-top: 80px;
+}
 .theme-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    justify-content: center;
-    margin-bottom: 30px;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr); /* 5 columns */
+    gap: 20px;
+    max-width: 1000px;
+    margin: 0 auto 30px auto;
+    padding: 0 10px;
 }
 
-/* Theme Card */
 .theme-card {
     background-color: white;
     border-radius: 12px;
     text-align: center;
     box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.15);
     transition: transform 0.3s ease-in-out, background-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
-    padding-left: 10px;
-    padding-right: 10px;
+    padding: 20px 10px;
+    cursor: pointer;
+    display: flex;
     align-items: center;
-    align-self: center;
+    justify-content: center;
+    height: 100px; /* Ensures consistent height */
 }
+
 
 /* Text Styling */
 .theme-card h3 {
@@ -35,10 +45,11 @@
     transition: color 0.3s ease-in-out; /* Smooth text color transition */
 }
 
+
 /* Hover Effect */
 .theme-card:hover {
     cursor: pointer;
-    background-color: white;
+    background-color: rgb(4, 8, 137);
     box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.2);
 }
 
@@ -56,4 +67,20 @@
 .after-products {
     margin-top: 30px;
     margin-bottom: 30px;
+}
+
+.load-more-button {
+    color: white; /* 👈 this ensures white font */
+    background-color: #11009E;
+    padding: 12px 24px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
+}
+
+.load-more-button:hover {
+    background-color: #1900d5; /* Slightly lighter on hover */
 }

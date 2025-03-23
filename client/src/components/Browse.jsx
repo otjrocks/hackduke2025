@@ -96,7 +96,7 @@ export default function Browse() {
                 (
                 <div className="browse-container">
                 <h1>Browse Duke's Closet</h1>
-                <h2>Browse By Theme</h2>
+                <h2>Browse By Theme:</h2>
                     <div className="theme-list">
                         {themes.map((theme) => (
                             <div
@@ -108,6 +108,8 @@ export default function Browse() {
                             </div>
                         ))}
                     </div>
+
+                <h2>Browse All:</h2>
                 <ProductsList products={products} />
                 <div className="after-products">
                 {loading && (
