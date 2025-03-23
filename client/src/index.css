@@ -17,8 +17,8 @@ code {
 button {
   font-family: 'Open Sans', sans-serif;
   font-size: 1.5rem;
-  color: white;
-  background-color: #ff5733;
+  color: rgb(33, 67, 203);
+  background-color: rgb(4, 8, 137);
   padding: 12px 24px;
   border-radius: 8px;
   text-decoration: none;
@@ -27,7 +27,11 @@ button {
 }
 
 button:hover {
-  background-color: #c70039;
+  background-color: #0413b8;
+}
+
+button:hover h3 {
+  color: white !important;
 }
 
 .main-content {

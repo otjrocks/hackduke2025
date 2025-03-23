@@ -14,7 +14,7 @@
 
 .profile-header h1 {
     font-size: 2.5rem;
-    color: #ff5733;
+    color: white;
     font-weight: bold;
 }
 
@@ -40,14 +40,14 @@ button {
 }
 
 button:hover {
-    background-color: #c70039;
+    background-color: rgb(33, 67, 203);
 }
 
 h2 {
     font-size: 2.2rem; 
     text-align: center;
     margin-bottom: 20px;
-    color: #ff5733;
+    color: rgb(4, 8, 137);
 }
 
 .product-list {
@@ -81,7 +81,7 @@ h2 {
     padding-right: 20px;
     font-size: 1.4rem;
     font-weight: bold;
-    color: #ff5733;
+    color: rgb(33, 67, 203);
 }
 
 .product-item p {

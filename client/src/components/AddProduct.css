@@ -24,7 +24,7 @@ h2 {
 label {
     font-size: 1.1rem;
     font-weight: bold;
-    color: #ff5733;
+    color: rgb(4, 8, 137);
 }
 
 input, select {
@@ -37,7 +37,7 @@ input, select {
 }
 
 button {
-    background-color: #ff5733;
+    background-color: rgb(4, 8, 137);
     color: white;
     font-size: 1.2rem;
     padding: 10px 15px;
@@ -48,7 +48,7 @@ button {
 }
 
 button:hover {
-    background-color: #c70039;
+    background-color: rgb(4, 8, 137);
 }
 
 .error-message {
