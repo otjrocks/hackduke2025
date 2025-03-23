@@ -95,7 +95,7 @@ export default function Browse() {
                 :
                 (
                 <div className="browse-container">
-                <h1>Browse The Campus Closet</h1>
+                <h1>Browse Duke's Closet</h1>
                 <h2>Browse By Theme</h2>
                     <div className="theme-list">
                         {themes.map((theme) => (

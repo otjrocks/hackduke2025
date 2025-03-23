@@ -1,7 +1,7 @@
 .main-content {
     width: 100%;
     text-align: center;
-    background-color: #fdf0d5;
+    background-color: rgb(4, 8, 137);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -30,7 +30,7 @@ button {
     padding: 8px 14px; /* Smaller buttons */
     font-size: 1rem;
     font-weight: bold;
-    background-color: #ff5733;
+    background-color: blue;
     color: white;
     border: none;
     border-radius: 6px;

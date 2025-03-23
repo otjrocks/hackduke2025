@@ -9,11 +9,11 @@
 h1, h2 {
     font-family: 'Super Boys', sans-serif;
     font-size: 3.7rem;
-    color: #ff5733;
+    color: rgb(249, 249, 249);
 }
 
 body {
-    background-color: #fdf0d5;
+    background-color: rgb(33, 67, 203);
     margin: 0;
     padding: 0;
 }
@@ -39,39 +39,38 @@ body {
 
 /* Browse Button */
 .browse-link {
-    font-family: 'Open Sans', sans-serif;
-    font-size: 1.5rem;
+    font-family: 'Super Boys', sans-serif;
+    font-size: 1.4rem;
     color: white;
-    background-color: #ff5733;
+    background-color: rgb(4, 8, 137);
     padding: 12px 24px;
     border-radius: 8px;
     text-decoration: none;
     transition: 0.3s ease-in-out;
-    font-weight: bold;
 }
 
 .browse-link:hover {
-    background-color: #c70039;
+    background-color: #0413b8;
 }
 
 /* About Us Section */
 .about-section {
-    background-color: blue; /* Salmon orange background */
+    background-color: rgb(4, 8, 137);
     text-align: center;
     color: white;
     width: 80%;
     padding: 60px 20px;
     border-radius: 10px;
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-    margin-top: 150px;
-    margin-bottom: 150px;
+    margin-top: 50px;
+    margin-bottom: 170px;
 }
 
 .about-section h2 {
     font-size: 3rem;
     font-size: 3rem;
     font-weight: bold;
-    color: #fdf0d5;
+    color: white;
     margin-bottom: 20px;
 }
 
@@ -81,7 +80,7 @@ body {
     font-family: 'Open Sans', sans-serif;
     font-size: 1.2rem;
     line-height: 1.6;
-    color: #fdf0d5;
+    color: white;
     font-size: 1.2rem;
     line-height: 1.5;
     text-align: center;
@@ -93,6 +92,6 @@ body {
     h1, h2 {
         font-family: 'Super Boys', sans-serif !important;
         font-size: 2.3rem;
-        color: #ff5733;
+        color: white;
     }
 }

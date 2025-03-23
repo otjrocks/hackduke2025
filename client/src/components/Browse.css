@@ -2,7 +2,7 @@
 .browse-container {
     text-align: center;
     padding: 20px;
-    background-color: #fdf0d5;
+    background-color: rgb(33, 67, 203);
 }
 
 /* Grid Layout */
@@ -29,7 +29,7 @@
 
 /* Text Styling */
 .theme-card h3 {
-    color: rgb(248, 100, 1); /* Light Orange Text */
+    color: rgb(33, 67, 203);
     font-size: 1rem;
     font-weight: bold;
     transition: color 0.3s ease-in-out; /* Smooth text color transition */
@@ -38,7 +38,7 @@
 /* Hover Effect */
 .theme-card:hover {
     cursor: pointer;
-    background-color: #ff7043;
+    background-color: white;
     box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.2);
 }
 

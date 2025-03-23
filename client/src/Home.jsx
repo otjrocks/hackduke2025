@@ -36,7 +36,7 @@ export default function Home() {
             <Header />
             {/* Hero Section */}
             <div className="home-container">
-                <h1>Welcome to Campus Closet</h1>
+                <h1>Welcome to Duke's Campus Closet</h1>
                 {isLoggedIn ? (
                     <Link to="/browse" className="browse-link">browse items</Link>
                 ) : (

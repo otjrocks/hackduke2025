@@ -3,7 +3,7 @@
     display: flex;
     justify-content: space-between; /* This will place title on the left and menu on the right */
     align-items: center; /* Centers items vertically */
-    background-color: #333;
+    background-color: rgb(4, 8, 137);
     width: 100vw;
     color: white;
     padding-top: 15px;
@@ -11,8 +11,8 @@
 }
 
 .app-name {
+    font-family: 'Super Boys', sans-serif;
     font-size: 24px;
-    font-weight: bold;
     padding-left: 30px;
     text-decoration: none !important;
     color: white;
@@ -35,6 +35,7 @@ a {
 
 .navigation a {
     color: white;
+    font-family: 'Super Boys', sans-serif;
     text-decoration: none;
 }
 
