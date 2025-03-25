@@ -27,7 +27,7 @@ export default function Profile() {
       console.error('Error fetching products:', err);
     }
   };
-  
+
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -60,8 +60,8 @@ export default function Profile() {
       });
 
       if (response.data.success) {
-        setMessage(response.data.success);
         setProducts((prev) => prev.filter((p) => p._id !== productId));
+        setMessage(response.data.success);
       } else {
         setMessage(response.data.message);
       }
@@ -96,12 +96,11 @@ export default function Profile() {
             <h2>Your Products</h2>
         
 
-        
+            {message && <p className="no-products-message">{message}</p>}
             {products.length === 0 ? (
               <p className="no-products-message">You haven’t listed anything yet.</p>
             ) : (
               <ul className="product-list">
-                {message && <p>{message}</p>}
                 {products.map((product) => (
                   <li key={product._id} className="product-item">
                     <img src={product.image} alt={product.name} className="product-image" />
