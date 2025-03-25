@@ -54,12 +54,17 @@ img {
   width: 100%;
 }
 
+a {
+  color: var(--color-primary);
+}
+
+
 /* Spinner Container - Ensures it appears while uploading */
 .spinner-container {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 10px;
+  margin: 30px;
 }
 
 /* Spinner - Visible during upload */
@@ -94,6 +99,7 @@ img {
   gap: 20px;
   width: 90%;
   margin: 20px auto;
+  padding: 0;
 }
 
 .product-item {
@@ -107,7 +113,7 @@ img {
   align-items: center;
 }
 
-.product-item h3 {
+.product-item h2, h3 {
   font-size: 1.3rem;
   font-weight: bold;
   color: rgb(4, 8, 137); /* blue text on white */

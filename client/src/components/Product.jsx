@@ -42,7 +42,7 @@ export default function Product() {
     <>
       <Header />
       <div className="main-content">
-        <div key={product._id} className="single-product">
+        <div key={product._id} className="product-item single-product">
           {product.image && <img src={product.image} alt={product.name} />}
           <h2>{product.name}</h2>
           <p>Size: {product.size}</p>

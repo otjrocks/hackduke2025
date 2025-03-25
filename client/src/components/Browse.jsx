@@ -85,6 +85,11 @@ export default function Browse() {
     return (
         <>
             <Header />
+            {loading && (
+                    <div className="spinner-container">
+                        <div className="spinner"></div>
+                    </div>
+            )}
             {error ? (
                 <div className="browse-container">
                     <h1 className="error">{error}</h1> 

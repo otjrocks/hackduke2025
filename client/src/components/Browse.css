@@ -14,26 +14,27 @@
 }
 
 .theme-list {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr); /* 5 columns */
-    gap: 20px;
-    max-width: 1000px;
+    display: flex;
+    flex-wrap: wrap;
     margin: 0 auto 30px auto;
     padding: 0 10px;
 }
 
 .theme-card {
-    background-color: white;
+    background-color: var(--color-secondary);
+    color: var(--color-primary);
     border-radius: 12px;
     text-align: center;
     box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.15);
     transition: transform 0.3s ease-in-out, background-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
-    padding: 20px 10px;
     cursor: pointer;
-    display: flex;
     align-items: center;
     justify-content: center;
-    height: 100px; /* Ensures consistent height */
+    margin: 10px;
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-top: 10px;
+    padding-bottom: 10px;
 }
 
 
@@ -47,13 +48,14 @@
 
 /* Hover Effect */
 .theme-card:hover {
+    color: var(--color-secondary);
+    background-color: var(--color-hover);
     cursor: pointer;
     box-shadow: 0px 12px 24px rgba(0, 0, 0, 0.2);
 }
 
-/* Change text color on hover */
 .theme-card:hover h3 {
-    color: white !important;
+    color: var(--color-secondary);
 }
 
 .product-item p {

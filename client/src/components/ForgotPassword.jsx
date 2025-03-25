@@ -46,13 +46,11 @@ export default function ForgotPassword() {
     return (
         <>
             <Header />
+            <h2>Forgot Password</h2>
             <div>
                 <div>
                     <div>
                         <form>
-                            <h1>
-                                Forgot Password
-                            </h1>
                             <div>
                                 <p>Enter the email associated with your account to reset the password.</p>
                                 <div>

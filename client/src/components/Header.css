@@ -3,9 +3,9 @@
     display: flex;
     justify-content: space-between; /* This will place title on the left and menu on the right */
     align-items: center; /* Centers items vertically */
-    background-color: rgb(4, 8, 137);
+    background-color: var(--color-dark);
     width: 100vw;
-    color: white;
+    color: var(--color-secondary);
     padding-top: 15px;
     padding-bottom: 15px;
 }
@@ -15,7 +15,7 @@
     font-size: 24px;
     padding-left: 30px;
     text-decoration: none !important;
-    color: white;
+    color: var(--color-secondary);
 }
 
 a {
@@ -34,7 +34,7 @@ a {
 }
 
 .navigation a {
-    color: white;
+    color: var(--color-secondary);
     font-family: 'Super Boys', sans-serif;
     text-decoration: none;
 }
@@ -73,17 +73,18 @@ a {
 
     .navigation li {
         margin-left: 0;
-        margin-top: 10px;
+        margin-top: 18px;
         width: 100%;
         text-align: center;
+        font-size: 1.3rem;
     }
 
     /* Hamburger icon */
     .hamburger {
-        font-size: 30px;
+        font-size: 35px;
         cursor: pointer;
         display: block;
-        color: white;
+        color: var(--color-secondary);
         text-align: center;
         margin-top: 3px;
         margin-bottom: 3px;

@@ -13,6 +13,21 @@ export default function Profile() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
 
+  const fetchUserProducts = async (email, page) => {
+    try {
+      const response = await axios.get(process.env.REACT_APP_SERVER_URL + `/product/get/email/${email}?page=${page}`, {
+        withCredentials: true,
+      });
+
+      if (response.data.success) {
+        setProducts(response.data.products);
+        setTotalPages(response.data.totalPages);
+      }
+    } catch (err) {
+      console.error('Error fetching products:', err);
+    }
+  };
+  
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -28,21 +43,6 @@ export default function Profile() {
         console.error('Error fetching user data:', err);
       } finally {
         setLoading(false);
-      }
-    };
-
-    const fetchUserProducts = async (email, page) => {
-      try {
-        const response = await axios.get(process.env.REACT_APP_SERVER_URL + `/product/get/email/${email}?page=${page}`, {
-          withCredentials: true,
-        });
-
-        if (response.data.success) {
-          setProducts(response.data.products);
-          setTotalPages(response.data.totalPages);
-        }
-      } catch (err) {
-        console.error('Error fetching products:', err);
       }
     };
 
@@ -86,7 +86,12 @@ export default function Profile() {
               <p className="greeting">You're logged in as {userInfo.email}</p>
             </div>
 
-            <button className="logout-btn" onClick={handleLogout}>Logout</button>
+            <div>
+            <Link to="/addproduct">
+                <button className="logout-btn">Add New Product</button>
+              </Link>
+              <button className="logout-btn" onClick={handleLogout}>Logout</button>
+            </div>
 
             <h2>Your Products</h2>
         
@@ -112,10 +117,6 @@ export default function Profile() {
                 ))}
               </ul>
             )}
-
-            <Link to="/addproduct">
-              <button className="logout-btn">Add New Product</button>
-            </Link>
 
             <div className="after-products pagination-controls">
               {currentPage > 1 && (

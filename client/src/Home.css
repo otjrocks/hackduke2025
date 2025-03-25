@@ -8,8 +8,15 @@
 /* Apply Super Boys font to all headers */
 h1, h2 {
     font-family: 'Super Boys', sans-serif;
-    font-size: 3.7rem;
     color: var(--color-secondary);
+}
+
+h1 {
+    font-size: 3.7rem;
+}
+
+h2 {
+    font-size: 2.5rem;
 }
 
 body {
@@ -88,9 +95,12 @@ body {
 }
 
 @media (max-width: 768px) { 
-    h1, h2 {
+    h1 {
         font-family: 'Super Boys', sans-serif !important;
         font-size: 2.3rem;
         color: var(--color-secondary);
+    }
+    h2 {
+        font-size: 2rem;
     }
 }
