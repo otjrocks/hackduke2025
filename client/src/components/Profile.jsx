@@ -3,6 +3,7 @@ import axios from 'axios';
 import Header from './Header';
 import { Link } from 'react-router-dom';
 import './Profile.css';
+import './../index.css';
 
 export default function Profile() {
   const [userInfo, setUserInfo] = useState(null);
