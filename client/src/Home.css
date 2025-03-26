@@ -81,6 +81,10 @@ body {
     margin-bottom: 20px;
 }
 
+.about-section h3 {
+    color: var(--color-secondary);
+}
+
 .about-section p {
     font-size: 1.4rem;
     color: var(--color-secondary);
