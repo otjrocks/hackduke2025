@@ -129,11 +129,11 @@ export default function AddProduct() {
 
         <label>Category:</label>
         <select name="category" value={formData.category} onChange={handleChange}>
-          <option value="Tops">Clothing</option>
-          <option value="Bottoms">Pants</option>
+          <option value="Tops">Tops</option>
+          <option value="Bottoms">Bottoms</option>
           <option value="Dresses">Dresses</option>
           <option value="Shoes">Shoes</option>
-          <option value="Accessories">Hats</option>
+          <option value="Accessories">Accessories</option>
         </select>
 
         <label>Size:</label>
