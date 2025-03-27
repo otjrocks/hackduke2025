@@ -85,6 +85,10 @@ body {
     color: var(--color-secondary);
 }
 
+.white-link {
+    color: var(--color-secondary); 
+}
+
 .about-section p {
     font-size: 1.4rem;
     color: var(--color-secondary);

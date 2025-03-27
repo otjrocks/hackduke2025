@@ -34,6 +34,7 @@ export default function AboutBox() {
             <p className="about-ending">
                 Together, we can dress the part—sustainably.
             </p>
+            <p>Contact the team with any feedback at <a className="white-link" href="mailto:campuscloset.club@gmail.com">campuscloset.club@gmail.com</a>.</p>
             </div>
         </>
     )
