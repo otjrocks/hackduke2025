@@ -7,7 +7,7 @@ const checkAuthentication = require('../authMiddleware');
 // Get the products based on date and page (?page=)
 router.get("/get", checkAuthentication, async (req, res) => {
     try {
-        const perPage = 10; // Number of products per page
+        const perPage = 12; // Number of products per page
         const page = parseInt(req.query.page) || 1; // Current page from the query string
 
         // Count total documents
@@ -66,7 +66,7 @@ router.get("/get/product/:id", checkAuthentication, async (req, res) => {
 router.get("/get/email/:email", checkAuthentication, async (req, res) => {
     try {
         const userEmail = req.params.email;
-        const perPage = 10; // Default to 10 products per page
+        const perPage = 12; // Default to 10 products per page
         const page = parseInt(req.query.page) || 1; // Default to page 1
 
         // Find the total number of products for this email
@@ -103,7 +103,7 @@ router.get("/get/email/:email", checkAuthentication, async (req, res) => {
 // Get the products based on theme and pagination
 router.get("/get/:theme", checkAuthentication, async (req, res) => {
     try {
-        const perPage = 10; // Number of products per page
+        const perPage = 12; // Number of products per page
         const page = parseInt(req.query.page) || 1; // Current page from the query string
 
         // Find the theme by name
