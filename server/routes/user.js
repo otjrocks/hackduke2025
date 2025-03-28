@@ -201,10 +201,10 @@ router.post('/reset/:token', async (req, res) => {
             return res.json({success: false, message: 'Password reset token is invalid or has expired.'});
         }
         // Validate password strength
-        if (!isStrongPassword(password)) {
+        if (!isStrongPassword(req.body.password)) {
             return res.json({ success: false, message: "Password must be at least 8 characters long, include an uppercase letter, a lowercase letter, a number, and a special character." });
         }
-        
+
         if (req.body.password === req.body.confirm) {
             await user.setPassword(req.body.password);
             user.resetPasswordToken = undefined;
