@@ -51,6 +51,7 @@ export default function Header() {
                     { isLoggedIn ? (
                         <>
                             <li><Link to="/profile">profile</Link></li>
+                            <li><Link to="/addproduct">add product</Link></li>
                             <li><Link to={process.env.REACT_APP_SERVER_URL + '/user/logout'}>logout</Link></li>
                         </>
                     ) : (
