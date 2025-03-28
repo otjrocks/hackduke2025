@@ -29,30 +29,33 @@ export default function AddProduct() {
 
   const handleFileChange = async (e) => {
     const selectedFile = e.target.files[0];
-    if (selectedFile) {
-      setFileUrl(null);
-      if (selectedFile.size > 5 * 1024 * 1024) {
-        setErrorMessage("File size exceeds 5MB. Please upload a smaller image.");
-        return;
-      }
-      setLoading(true);
-      setErrorMessage(""); 
-      try {
-        const uploadFormData = new FormData();
-        uploadFormData.append("image", selectedFile);
+    if (!selectedFile) return;
 
-        const response = await axios.post(process.env.REACT_APP_SERVER_URL + "/upload", uploadFormData, {
-          headers: { "Content-Type": "multipart/form-data" },
-        });
+    if (selectedFile.size > 12 * 1024 * 1024) {
+      setErrorMessage("File size exceeds 12MB. Please upload a smaller image.");
+      return;
+    }
+    
+    setLoading(true);
+    setErrorMessage("");
+    try {
+      const { data } = await axios.get(
+        `${process.env.REACT_APP_SERVER_URL}/generate-upload-url?fileType=${selectedFile.type}`
+      );
 
-        setFileUrl(response.data.fileUrl);
-        setFormData((prev) => ({ ...prev, image: response.data.fileUrl }));
-      } catch (error) {
-        console.error("Error uploading image:", error);
-        setErrorMessage("Upload failed. Please try again. " + error);
-      } finally {
-        setLoading(false); // Hide spinner when upload completes
-      }
+      await fetch(data.uploadUrl, {
+        method: "PUT",
+        body: selectedFile,
+        headers: { "Content-Type": selectedFile.type },
+      });
+
+      setFileUrl(process.env.REACT_APP_AWS_URL + data.filePath);
+      setFormData((prev) => ({ ...prev, image: process.env.REACT_APP_AWS_URL + data.filePath }));
+    } catch (error) {
+      console.error("Error uploading image:", error);
+      setErrorMessage("Upload failed. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
 

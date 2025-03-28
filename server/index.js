@@ -6,6 +6,7 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const multer = require("multer");
 const { S3Client, PutObjectCommand, CreateMultipartUploadCommand, UploadPartCommand, CompleteMultipartUploadCommand } = require("@aws-sdk/client-s3");
+const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
 require("dotenv").config(); // Ensure you have your AWS credentials in .env
 const session = require("express-session");
 const MongoDBStore = require("connect-mongodb-session")(session);
@@ -97,70 +98,98 @@ const s3 = new S3Client({
 
 const BUCKET_NAME = process.env.AWS_S3_BUCKET_NAME;
 
-app.post("/upload", upload.single("image"), async (req, res) => {
+// app.post("/upload", upload.single("image"), async (req, res) => {
+//   try {
+//     if (!req.file) {
+//       return res.status(400).json({ success: false, message: "No file uploaded" });
+//     }
+
+//     const fileBuffer = req.file.buffer;
+//     const fileName = `${Date.now()}-${req.file.originalname}`;
+//     const fileSize = req.file.size;
+    
+//     const s3Params = {
+//       Bucket: BUCKET_NAME,
+//       Key: fileName,
+//       ContentType: req.file.mimetype,
+//     };
+
+//     if (fileSize <= 5 * 1024 * 1024) {
+//       // Use regular PutObjectCommand for files <= 5MB
+//       await s3.send(new PutObjectCommand({ ...s3Params, Body: fileBuffer }));
+//     } else {
+//       // Multipart Upload for large files
+//       const multipartUpload = await s3.send(new CreateMultipartUploadCommand(s3Params));
+
+//       const chunkSize = 5 * 1024 * 1024; // 5MB per chunk
+//       const numParts = Math.ceil(fileSize / chunkSize);
+//       const parts = [];
+
+//       for (let partNumber = 1; partNumber <= numParts; partNumber++) {
+//         const start = (partNumber - 1) * chunkSize;
+//         const end = Math.min(start + chunkSize, fileSize);
+//         const partBuffer = fileBuffer.slice(start, end);
+
+//         const uploadPart = await s3.send(
+//           new UploadPartCommand({
+//             Bucket: BUCKET_NAME,
+//             Key: fileName,
+//             UploadId: multipartUpload.UploadId,
+//             PartNumber: partNumber,
+//             Body: partBuffer,
+//           })
+//         );
+
+//         parts.push({ PartNumber: partNumber, ETag: uploadPart.ETag });
+//       }
+
+//       // Complete Multipart Upload
+//       await s3.send(
+//         new CompleteMultipartUploadCommand({
+//           Bucket: BUCKET_NAME,
+//           Key: fileName,
+//           UploadId: multipartUpload.UploadId,
+//           MultipartUpload: { Parts: parts },
+//         })
+//       );
+//     }
+
+//     const fileUrl = `https://${BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${fileName}`;
+
+//     console.log("File Uploaded:", fileUrl);
+//     res.json({ success: true, fileUrl });
+
+//   } catch (error) {
+//     console.error("Upload error:", error);
+//     res.status(500).json({ success: false, message: "Upload failed" });
+//   }
+// });
+
+
+// Use magic link to allow front end to upload image directly to AWS instead of web server
+app.get("/generate-upload-url", async (req, res) => {
   try {
-    if (!req.file) {
-      return res.status(400).json({ success: false, message: "No file uploaded" });
+    const fileType = req.query.fileType; // e.g., "image/png"
+
+    if (!fileType) {
+      return res.status(400).json({ success: false, message: "Missing fileType parameter" });
     }
 
-    const fileBuffer = req.file.buffer;
-    const fileName = `${Date.now()}-${req.file.originalname}`;
-    const fileSize = req.file.size;
+    const fileName = `uploads/${Date.now()}.${fileType.split("/")[1]}`;
     
-    const s3Params = {
+    const command = new PutObjectCommand({
       Bucket: BUCKET_NAME,
       Key: fileName,
-      ContentType: req.file.mimetype,
-    };
+      ContentType: fileType,
+    });
 
-    if (fileSize <= 5 * 1024 * 1024) {
-      // Use regular PutObjectCommand for files <= 5MB
-      await s3.send(new PutObjectCommand({ ...s3Params, Body: fileBuffer }));
-    } else {
-      // Multipart Upload for large files
-      const multipartUpload = await s3.send(new CreateMultipartUploadCommand(s3Params));
+    const signedUrl = await getSignedUrl(s3, command, { expiresIn: 60 });
 
-      const chunkSize = 5 * 1024 * 1024; // 5MB per chunk
-      const numParts = Math.ceil(fileSize / chunkSize);
-      const parts = [];
-
-      for (let partNumber = 1; partNumber <= numParts; partNumber++) {
-        const start = (partNumber - 1) * chunkSize;
-        const end = Math.min(start + chunkSize, fileSize);
-        const partBuffer = fileBuffer.slice(start, end);
-
-        const uploadPart = await s3.send(
-          new UploadPartCommand({
-            Bucket: BUCKET_NAME,
-            Key: fileName,
-            UploadId: multipartUpload.UploadId,
-            PartNumber: partNumber,
-            Body: partBuffer,
-          })
-        );
-
-        parts.push({ PartNumber: partNumber, ETag: uploadPart.ETag });
-      }
-
-      // Complete Multipart Upload
-      await s3.send(
-        new CompleteMultipartUploadCommand({
-          Bucket: BUCKET_NAME,
-          Key: fileName,
-          UploadId: multipartUpload.UploadId,
-          MultipartUpload: { Parts: parts },
-        })
-      );
-    }
-
-    const fileUrl = `https://${BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${fileName}`;
-
-    console.log("File Uploaded:", fileUrl);
-    res.json({ success: true, fileUrl });
+    res.json({ success: true, uploadUrl: signedUrl, filePath: fileName });
 
   } catch (error) {
-    console.error("Upload error:", error);
-    res.status(500).json({ success: false, message: "Upload failed" });
+    console.error("Error generating pre-signed URL:", error);
+    res.status(500).json({ success: false, message: "Failed to generate upload URL" });
   }
 });
 
