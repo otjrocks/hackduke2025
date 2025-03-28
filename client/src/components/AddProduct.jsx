@@ -49,7 +49,7 @@ export default function AddProduct() {
         setFormData((prev) => ({ ...prev, image: response.data.fileUrl }));
       } catch (error) {
         console.error("Error uploading image:", error);
-        setErrorMessage("Upload failed. Please try again.");
+        setErrorMessage("Upload failed. Please try again. " + error);
       } finally {
         setLoading(false); // Hide spinner when upload completes
       }
