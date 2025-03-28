@@ -37,7 +37,7 @@ export default function Header() {
 
     return (
         <header className="header">
-            <Link className="app-name" to="/"><img className="logo" src="./logo.png"></img></Link>
+            <Link className="app-name" to="/"><img className="logo" src="/logo.png"></img></Link>
             {/* Hamburger icon */}
             <div className="hamburger" onClick={() => setIsMenuOpen(!isMenuOpen)}>
                 &#9776;
