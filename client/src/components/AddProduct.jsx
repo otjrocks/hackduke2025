@@ -58,6 +58,10 @@ export default function AddProduct() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!fileUrl) {
+      setErrorMessage("Image upload is required. Please try uploading a new image.");
+      return;
+    }
     setFormData((prev) => ({ ...prev, image: fileUrl }));
     console.log(JSON.stringify(formData))
     try {
@@ -164,6 +168,7 @@ export default function AddProduct() {
         </select>
 
         <button type="submit">Add Product</button>
+        {errorMessage && <p className="error-message">{errorMessage}</p>}
       </form>
     </div>
   );
