@@ -45,6 +45,10 @@ export default function Browse() {
                     setError(data.message);
                 } else {
                     setError("");
+                    if (data.products === undefined) {
+                        setError("No products available")
+                        setHasMore(false);
+                    }
                     if (data.products.length === 0) {
                         setHasMore(false); // No more products to load
                     } else {
