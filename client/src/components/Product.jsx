@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import Header from "./Header";
 import "./Product.css";
 
@@ -36,7 +36,16 @@ export default function Product() {
   }, [id]);
 
   if (loading) return <div className="spinner-container"><div className="spinner"></div></div>;
-  if (error) return <p>{error}</p>;
+  if (error) return (
+    <>
+    <Header></Header>
+  <div className="browse-container">
+    <h1 className="error">{error}</h1> 
+    <br></br>
+    <Link to={process.env.REACT_APP_CLIENT_URL + "/login"} className="browse-link">login to begin</Link>
+  </div>
+    </>
+  );
 
   return (
     <>
