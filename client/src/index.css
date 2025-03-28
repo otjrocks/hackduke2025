@@ -1,7 +1,7 @@
 :root {
-  --color-primary: rgb(33, 67, 203);
-  --color-secondary: rgb(249, 249, 249);
-  --color-dark: rgb(4, 8, 137);
+  --color-primary: #2143cb;
+  --color-secondary: #f9f9f9;
+  --color-dark: #040889;
   --color-hover: #0413b8;
 }
 
@@ -100,6 +100,11 @@ a {
   width: 90%;
   margin: 20px auto;
   padding: 0;
+}
+
+.product-item h2 {
+  font-family: 'Open Sans', sans-serif;
+  -webkit-text-stroke: 0px var(--color-dark);
 }
 
 .product-item {
