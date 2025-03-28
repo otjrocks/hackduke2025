@@ -47,7 +47,7 @@ router.get("/get", checkAuthentication, async (req, res) => {
 
 
 // get single product
-router.get("/get/product/:id", async (req, res) => {
+router.get("/get/product/:id", checkAuthentication, async (req, res) => {
     try {
         const { id } = req.params;
         const product = await Product.findById(id);
