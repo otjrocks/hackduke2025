@@ -43,13 +43,11 @@ export default function ResetPassword() {
     return (
         <>
             <Header />
+            <h2>Reset Password</h2>
             <section>
                 <div>
                     <div>
                         <form>
-                            <h1>
-                                Reset Password
-                            </h1>
                             <div className="space-y-4 md:space-y-6">
                                 <div>
                                     <label htmlFor="password">Password</label>
