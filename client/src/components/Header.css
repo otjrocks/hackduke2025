@@ -10,6 +10,11 @@
     padding-bottom: 15px;
 }
 
+.logo {
+    width: auto;
+    max-height: 50px;
+}
+
 .app-name {
     font-family: 'Super Boys', sans-serif;
     font-size: 24px;
