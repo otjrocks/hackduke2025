@@ -43,6 +43,11 @@ export default function Header() {
                 &#9776;
             </div>
             <nav className={`navigation ${isMenuOpen ? 'open' : ''}`}>
+                    {isLoading && (
+                            <div className="spinner-container">
+                                <div className="spinner"></div>
+                            </div>
+                    )}
                     { !isLoading &&
                     <ul>
                     <li><Link to="/">home</Link></li>
